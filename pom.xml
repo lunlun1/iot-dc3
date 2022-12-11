@@ -21,10 +21,37 @@
         <version>2022.1.7</version>
     </parent>
 
+    <name>${project.artifactId}</name>
     <artifactId>dc3-driver-sdk</artifactId>
+    <version>2022.1.7</version>
     <packaging>jar</packaging>
 
+    <inceptionYear>2016-2022</inceptionYear>
+    <url>https://github.com/pnoker/iot-dc3</url>
     <description>IOT DC3 平台 驱动 SDK 。</description>
+
+    <developers>
+        <developer>
+            <id>pnoker</id>
+            <name>pnoker</name>
+            <email>pnokers@icloud.com</email>
+            <organization>pnoker.github.io</organization>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/pnoker/iot-dc3</url>
+        <connection>https://github.com/pnoker/iot-dc3.git</connection>
+        <developerConnection>https://github.com/pnoker/iot-dc3.git</developerConnection>
+    </scm>
 
     <dependencies>
 
@@ -40,32 +67,6 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-        <!-- Caffeine Cache -->
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-
-        <!-- Apache Pool2 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
-
-        <!-- Oshi & Jna -->
-        <dependency>
-            <groupId>com.github.oshi</groupId>
-            <artifactId>oshi-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-        </dependency>
-
         <!-- Tls Cert 相关 -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -76,6 +77,10 @@
         <dependency>
             <groupId>io.github.pnoker</groupId>
             <artifactId>dc3-common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.pnoker</groupId>
+            <artifactId>dc3-common-model</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.pnoker</groupId>
@@ -90,11 +95,19 @@
             <artifactId>dc3-common-exception</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
