@@ -16,14 +16,12 @@ package io.github.pnoker.common.sdk.bean.mqtt;
 
 import io.github.pnoker.common.utils.JsonUtil;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * @author pnoker
  * @since 2022.1.0
  */
 @Data
-@Accessors(chain = true)
 public class MessagePayload {
     private String payload;
     private MessageType messageType;

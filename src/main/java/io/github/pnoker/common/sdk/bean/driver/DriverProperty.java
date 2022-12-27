@@ -14,9 +14,9 @@
 
 package io.github.pnoker.common.sdk.bean.driver;
 
-import io.github.pnoker.common.constant.common.PrefixConstant;
 import io.github.pnoker.common.entity.DriverAttribute;
 import io.github.pnoker.common.entity.PointAttribute;
+import io.github.pnoker.common.enums.DriverTypeEnum;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
 import io.github.pnoker.common.valid.Insert;
 import io.github.pnoker.common.valid.Update;
@@ -46,7 +46,7 @@ public class DriverProperty {
             groups = {Insert.class, Update.class})
     private String tenant;
     private String name;
-    private String type = PrefixConstant.DRIVER;
+    private DriverTypeEnum type = DriverTypeEnum.DRIVER;
     private String remark;
     private ScheduleProperty schedule;
     private List<DriverAttribute> driverAttribute;

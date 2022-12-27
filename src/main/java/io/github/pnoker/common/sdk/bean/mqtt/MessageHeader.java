@@ -17,7 +17,6 @@ package io.github.pnoker.common.sdk.bean.mqtt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import org.springframework.messaging.MessageHeaders;
 
 import java.io.Serializable;
@@ -31,7 +30,6 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
 public class MessageHeader implements Serializable {
 // TODO 该地方需要重新考虑设计，自己看看MQTT相关文档描述
 

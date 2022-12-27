@@ -46,7 +46,7 @@ public class DriverUtil {
      * @return T
      */
     public static <T> T attribute(Map<String, AttributeInfo> infoMap, String attribute) {
-        return value(infoMap.get(attribute).getType(), infoMap.get(attribute).getValue());
+        return value(infoMap.get(attribute).getType().getCode(), infoMap.get(attribute).getValue());
     }
 
     /**

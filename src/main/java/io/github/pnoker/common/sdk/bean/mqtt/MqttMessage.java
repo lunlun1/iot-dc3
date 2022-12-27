@@ -17,7 +17,6 @@ package io.github.pnoker.common.sdk.bean.mqtt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -28,7 +27,6 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
 public class MqttMessage implements Serializable {
     private MessageHeader messageHeader;
     private MessagePayload messagePayload;

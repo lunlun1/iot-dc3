@@ -16,12 +16,14 @@ package io.github.pnoker.common.sdk.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.common.ExceptionConstant;
+import io.github.pnoker.common.entity.Point;
 import io.github.pnoker.common.enums.PointTypeEnum;
 import io.github.pnoker.common.exception.OutRangeException;
 import io.github.pnoker.common.exception.UnSupportException;
-import io.github.pnoker.common.entity.Point;
 import io.github.pnoker.common.utils.ArithmeticUtil;
 import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
 
 /**
  * 类型转换相关工具类集合
@@ -46,13 +48,13 @@ public class ConvertUtil {
      * @return Value
      */
     public static String convertValue(Point point, String rawValue) {
-        PointTypeEnum valueType = PointTypeEnum.of(point.getTypeFlag());
+        PointTypeEnum valueType = point.getTypeFlag();
         if (ObjectUtil.isNull(valueType)) {
             throw new UnSupportException("Unsupported type of {}", point.getTypeFlag());
         }
 
-        float base = null != point.getBase() ? point.getBase() : 0;
-        float multiple = null != point.getMultiple() ? point.getMultiple() : 1;
+        BigDecimal base = null != point.getBase() ? point.getBase() : new BigDecimal(0);
+        BigDecimal multiple = null != point.getMultiple() ? point.getMultiple() : new BigDecimal(1);
         int decimal = null != point.getValueDecimal() ? point.getValueDecimal() : 6;
 
         Object value;
@@ -93,10 +95,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return short
      */
-    private static byte convertByte(String content, float base, float multiple) {
+    private static byte convertByte(String content, BigDecimal base, BigDecimal multiple) {
         try {
             byte value = Byte.parseByte(content);
-            float v = (value + base) * multiple;
+            float v = (value + base.byteValue()) * multiple.byteValue();
             if (Float.isInfinite(value)) {
                 throw new OutRangeException();
             }
@@ -113,10 +115,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return short
      */
-    private static short convertShort(String content, float base, float multiple) {
+    private static short convertShort(String content, BigDecimal base, BigDecimal multiple) {
         try {
             short value = Short.parseShort(content);
-            float v = (value + base) * multiple;
+            float v = (value + base.shortValue()) * multiple.shortValue();
             if (Float.isInfinite(value)) {
                 throw new OutRangeException();
             }
@@ -133,10 +135,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return int
      */
-    private static int convertInteger(String content, float base, float multiple) {
+    private static int convertInteger(String content, BigDecimal base, BigDecimal multiple) {
         try {
             int value = Integer.parseInt(content);
-            float v = (value + base) * multiple;
+            float v = (value + base.intValue()) * multiple.intValue();
             if (Float.isInfinite(value)) {
                 throw new OutRangeException();
             }
@@ -153,10 +155,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return long
      */
-    private static long convertLong(String content, float base, float multiple) {
+    private static long convertLong(String content, BigDecimal base, BigDecimal multiple) {
         try {
             long value = Long.parseLong(content);
-            float v = (value + base) * multiple;
+            float v = (value + base.longValue()) * multiple.longValue();
             if (Float.isInfinite(value)) {
                 throw new OutRangeException();
             }
@@ -172,10 +174,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return float
      */
-    private static float convertFloat(String content, float base, float multiple, int decimal) {
+    private static float convertFloat(String content, BigDecimal base, BigDecimal multiple, int decimal) {
         try {
             float value = Float.parseFloat(content);
-            value = (value + base) * multiple;
+            value = (value + base.floatValue()) * multiple.floatValue();
             if (Float.isInfinite(value)) {
                 throw new OutRangeException();
             }
@@ -191,10 +193,10 @@ public class ConvertUtil {
      * @param content 字符串
      * @return double
      */
-    private static double convertDouble(String content, float base, float multiple, int decimal) {
+    private static double convertDouble(String content, BigDecimal base, BigDecimal multiple, int decimal) {
         try {
             double value = Double.parseDouble(content);
-            value = (value + base) * multiple;
+            value = (value + base.doubleValue()) * multiple.doubleValue();
             if (Double.isInfinite(value)) {
                 throw new OutRangeException();
             }

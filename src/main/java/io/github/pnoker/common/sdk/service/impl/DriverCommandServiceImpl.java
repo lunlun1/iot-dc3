@@ -16,9 +16,10 @@ package io.github.pnoker.common.sdk.service.impl;
 
 import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.bean.point.PointValue;
-import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.entity.Device;
 import io.github.pnoker.common.entity.Point;
+import io.github.pnoker.common.enums.AttributeTypeEnum;
+import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import io.github.pnoker.common.sdk.service.DriverCustomService;
@@ -75,11 +76,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     public Boolean write(String deviceId, String pointId, String value) {
         Device device = driverContext.getDeviceByDeviceId(deviceId);
         try {
+            Point point = driverContext.getPointByDeviceIdAndPointId(deviceId, pointId);
+            AttributeTypeEnum typeEnum = AttributeTypeEnum.of(point.getTypeFlag().getCode());
             return driverCustomService.write(
                     driverContext.getDriverInfoByDeviceId(deviceId),
                     driverContext.getPointInfoByDeviceIdAndPointId(deviceId, pointId),
                     device,
-                    new AttributeInfo(value, driverContext.getPointByDeviceIdAndPointId(deviceId, pointId).getTypeFlag())
+                    new AttributeInfo(value, typeEnum)
             );
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
