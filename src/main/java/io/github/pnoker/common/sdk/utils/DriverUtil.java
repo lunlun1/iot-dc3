@@ -18,7 +18,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.constant.common.ExceptionConstant;
-import io.github.pnoker.common.enums.PointValueTypeEnum;
+import io.github.pnoker.common.enums.PointTypeEnum;
 import io.github.pnoker.common.utils.DecodeUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -284,7 +284,7 @@ public class DriverUtil {
     public static String getTypeClassName(String type) {
         String className = String.class.getName();
 
-        PointValueTypeEnum valueType = PointValueTypeEnum.of(type);
+        PointTypeEnum valueType = PointTypeEnum.of(type);
         if (ObjectUtil.isNull(valueType)) {
             throw new IllegalArgumentException("Unsupported type of " + type);
         }

@@ -24,7 +24,7 @@ import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.common.PrefixConstant;
 import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.enums.ResponseEnum;
-import io.github.pnoker.common.model.*;
+import io.github.pnoker.common.entity.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
@@ -113,7 +113,7 @@ public class DriverMetadataReceiver {
                 driverContext.setDriverMetadata(driverMetadata);
                 driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
                 driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
-                driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getName(), JsonUtil.toJsonString(device)));
+                driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
                 log.info("The metadata synced successfully");
                 break;
             default:
@@ -132,7 +132,7 @@ public class DriverMetadataReceiver {
             log.info("Upsert profile \n{}", JsonUtil.toJsonString(profile));
             driverMetadataService.upsertProfile(profile);
         } else if (MetadataConstant.Profile.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete profile {}", profile.getName());
+            log.info("Delete profile {}", profile.getProfileName());
             driverMetadataService.deleteProfile(profile.getId());
         }
     }
@@ -148,7 +148,7 @@ public class DriverMetadataReceiver {
             log.info("Upsert device \n{}", JsonUtil.toJsonString(device));
             driverMetadataService.upsertDevice(device);
         } else if (MetadataConstant.Device.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete device {}", device.getName());
+            log.info("Delete device {}", device.getDeviceName());
             driverMetadataService.deleteDevice(device.getId());
         }
     }
@@ -164,7 +164,7 @@ public class DriverMetadataReceiver {
             log.info("Upsert point \n{}", JsonUtil.toJsonString(point));
             driverMetadataService.upsertPoint(point);
         } else if (MetadataConstant.Point.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete point {}", point.getName());
+            log.info("Delete point {}", point.getPointName());
             driverMetadataService.deletePoint(point.getProfileId(), point.getId());
         }
     }

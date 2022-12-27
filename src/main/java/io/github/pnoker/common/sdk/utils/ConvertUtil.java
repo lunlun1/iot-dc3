@@ -16,10 +16,10 @@ package io.github.pnoker.common.sdk.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.common.ExceptionConstant;
-import io.github.pnoker.common.enums.PointValueTypeEnum;
+import io.github.pnoker.common.enums.PointTypeEnum;
 import io.github.pnoker.common.exception.OutRangeException;
 import io.github.pnoker.common.exception.UnSupportException;
-import io.github.pnoker.common.model.Point;
+import io.github.pnoker.common.entity.Point;
 import io.github.pnoker.common.utils.ArithmeticUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,14 +46,14 @@ public class ConvertUtil {
      * @return Value
      */
     public static String convertValue(Point point, String rawValue) {
-        PointValueTypeEnum valueType = PointValueTypeEnum.of(point.getType());
+        PointTypeEnum valueType = PointTypeEnum.of(point.getTypeFlag());
         if (ObjectUtil.isNull(valueType)) {
-            throw new UnSupportException("Unsupported type of {}", point.getType());
+            throw new UnSupportException("Unsupported type of {}", point.getTypeFlag());
         }
 
         float base = null != point.getBase() ? point.getBase() : 0;
         float multiple = null != point.getMultiple() ? point.getMultiple() : 1;
-        int decimal = null != point.getDecimal() ? point.getDecimal() : 6;
+        int decimal = null != point.getValueDecimal() ? point.getValueDecimal() : 6;
 
         Object value;
         switch (valueType) {

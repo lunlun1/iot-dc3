@@ -17,8 +17,8 @@ package io.github.pnoker.common.sdk.service.impl;
 import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.bean.point.PointValue;
 import io.github.pnoker.common.exception.ServiceException;
-import io.github.pnoker.common.model.Device;
-import io.github.pnoker.common.model.Point;
+import io.github.pnoker.common.entity.Device;
+import io.github.pnoker.common.entity.Point;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import io.github.pnoker.common.sdk.service.DriverCustomService;
@@ -79,7 +79,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
                     driverContext.getDriverInfoByDeviceId(deviceId),
                     driverContext.getPointInfoByDeviceIdAndPointId(deviceId, pointId),
                     device,
-                    new AttributeInfo(value, driverContext.getPointByDeviceIdAndPointId(deviceId, pointId).getType())
+                    new AttributeInfo(value, driverContext.getPointByDeviceIdAndPointId(deviceId, pointId).getTypeFlag())
             );
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());

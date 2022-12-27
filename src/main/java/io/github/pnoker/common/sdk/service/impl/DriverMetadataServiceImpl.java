@@ -18,17 +18,17 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.bean.driver.DriverRegister;
-import io.github.pnoker.common.bean.model.DriverEvent;
+import io.github.pnoker.common.bean.entity.DriverEvent;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.exception.ServiceException;
-import io.github.pnoker.common.model.*;
+import io.github.pnoker.common.entity.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
+import io.github.pnoker.common.utils.HostUtil;
 import io.github.pnoker.common.utils.RegexUtil;
-import io.github.pnoker.common.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
 
     @Override
     public void initial() {
-        String localHost = RequestUtil.localHost();
+        String localHost = HostUtil.localHost();
         if (!RegexUtil.isName(driverProperty.getName()) || !RegexUtil.isName(this.serviceName) || !RegexUtil.isHost(localHost)) {
             throw new ServiceException("The driver name, service name or host name format is invalid");
         }
@@ -72,9 +72,14 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
             throw new ServiceException("The driver port is invalid, port range is 8600-8799");
         }
 
-        Driver driver = new Driver(driverProperty.getName(), this.serviceName, localHost, this.port, driverProperty.getType());
-        driver.setDescription(driverProperty.getDescription());
-        log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getName());
+        Driver driver = new Driver();
+        driver.setDriverName(driverProperty.getName());
+        driver.setServiceName(this.serviceName);
+        driver.setServerHost(localHost);
+        driver.setServerPort(this.port);
+        driver.setTypeFlag(driverProperty.getType());
+        driver.setRemark(driverProperty.getRemark());
+        log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getDriverName());
 
         registerHandshake();
         driverService.driverEventSender(new DriverEvent(
@@ -89,7 +94,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         ));
         syncDriverMetadata(driver);
 
-        log.info("The driver {}/{} is initialized successfully", driver.getServiceName(), driver.getName());
+        log.info("The driver {}/{} is initialized successfully", driver.getServiceName(), driver.getDriverName());
     }
 
     @Override
@@ -141,7 +146,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         if (ObjectUtil.isNotNull(attribute)) {
             // Add driver info to driver info map context
             driverContext.getDriverMetadata().getDriverInfoMap().computeIfAbsent(driverInfo.getDeviceId(), k -> new ConcurrentHashMap<>(16))
-                    .put(attribute.getName(), new AttributeInfo(driverInfo.getValue(), attribute.getType()));
+                    .put(attribute.getAttributeName(), new AttributeInfo(driverInfo.getConfigValue(), attribute.getTypeFlag()));
         }
     }
 
@@ -151,7 +156,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         if (ObjectUtil.isNotNull(attribute)) {
             // Delete driver info from driver info map context
             driverContext.getDriverMetadata().getDriverInfoMap().computeIfPresent(deviceId, (k, v) -> {
-                v.entrySet().removeIf(next -> next.getKey().equals(attribute.getName()));
+                v.entrySet().removeIf(next -> next.getKey().equals(attribute.getAttributeName()));
                 return v;
             });
 
@@ -167,7 +172,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
             // Add the point info to the device point info map context
             driverContext.getDriverMetadata().getPointInfoMap().computeIfAbsent(pointInfo.getDeviceId(), k -> new ConcurrentHashMap<>(16))
                     .computeIfAbsent(pointInfo.getPointId(), k -> new ConcurrentHashMap<>(16))
-                    .put(attribute.getName(), new AttributeInfo(pointInfo.getValue(), attribute.getType()));
+                    .put(attribute.getAttributeName(), new AttributeInfo(pointInfo.getConfigValue(), attribute.getTypeFlag()));
         }
     }
 
@@ -178,7 +183,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
             // Delete the point info from the device info map context
             driverContext.getDriverMetadata().getPointInfoMap().computeIfPresent(deviceId, (key1, value1) -> {
                 value1.computeIfPresent(pointId, (key2, value2) -> {
-                    value2.entrySet().removeIf(next -> next.getKey().equals(attribute.getName()));
+                    value2.entrySet().removeIf(next -> next.getKey().equals(attribute.getAttributeName()));
                     return value2;
                 });
                 return value1;

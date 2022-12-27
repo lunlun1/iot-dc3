@@ -14,7 +14,7 @@
 
 package io.github.pnoker.common.sdk.service;
 
-import io.github.pnoker.common.model.*;
+import io.github.pnoker.common.entity.*;
 
 /**
  * @author pnoker
