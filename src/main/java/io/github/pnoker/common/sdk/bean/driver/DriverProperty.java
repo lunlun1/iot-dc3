@@ -16,7 +16,7 @@ package io.github.pnoker.common.sdk.bean.driver;
 
 import io.github.pnoker.common.entity.DriverAttribute;
 import io.github.pnoker.common.entity.PointAttribute;
-import io.github.pnoker.common.enums.DriverTypeEnum;
+import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
 import io.github.pnoker.common.valid.Insert;
 import io.github.pnoker.common.valid.Update;
@@ -42,11 +42,11 @@ import java.util.List;
 public class DriverProperty {
     @NotBlank(message = "name can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
-            message = "Invalid name,contains invalid characters or length is not in the range of 2~32",
+            message = "Invalid name",
             groups = {Insert.class, Update.class})
     private String tenant;
     private String name;
-    private DriverTypeEnum type = DriverTypeEnum.DRIVER;
+    private DriverTypeFlagEnum type = DriverTypeFlagEnum.DRIVER;
     private String remark;
     private ScheduleProperty schedule;
     private List<DriverAttribute> driverAttribute;

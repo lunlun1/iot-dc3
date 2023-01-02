@@ -77,7 +77,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         driver.setServiceName(this.serviceName);
         driver.setServerHost(localHost);
         driver.setServerPort(this.port);
-        driver.setTypeFlag(driverProperty.getType());
+        driver.setDriverTypeFlag(driverProperty.getType());
         driver.setRemark(driverProperty.getRemark());
         log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getDriverName());
 
@@ -146,7 +146,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         if (ObjectUtil.isNotNull(attribute)) {
             // Add driver info to driver info map context
             driverContext.getDriverMetadata().getDriverInfoMap().computeIfAbsent(driverInfo.getDeviceId(), k -> new ConcurrentHashMap<>(16))
-                    .put(attribute.getAttributeName(), new AttributeInfo(driverInfo.getConfigValue(), attribute.getTypeFlag()));
+                    .put(attribute.getAttributeName(), new AttributeInfo(driverInfo.getConfigValue(), attribute.getAttributeTypeFlag()));
         }
     }
 
@@ -172,7 +172,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
             // Add the point info to the device point info map context
             driverContext.getDriverMetadata().getPointInfoMap().computeIfAbsent(pointInfo.getDeviceId(), k -> new ConcurrentHashMap<>(16))
                     .computeIfAbsent(pointInfo.getPointId(), k -> new ConcurrentHashMap<>(16))
-                    .put(attribute.getAttributeName(), new AttributeInfo(pointInfo.getConfigValue(), attribute.getTypeFlag()));
+                    .put(attribute.getAttributeName(), new AttributeInfo(pointInfo.getConfigValue(), attribute.getAttributeTypeFlag()));
         }
     }
 

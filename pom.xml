@@ -19,12 +19,12 @@
     <parent>
         <groupId>io.github.pnoker</groupId>
         <artifactId>dc3-parent</artifactId>
-        <version>2022.1.9</version>
+        <version>2022.2.1</version>
     </parent>
 
     <name>${project.artifactId}</name>
     <artifactId>dc3-driver-sdk</artifactId>
-    <version>2022.1.9</version>
+    <version>2022.2.1</version>
     <packaging>jar</packaging>
 
     <inceptionYear>2016-2022</inceptionYear>
@@ -74,12 +74,6 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
-        </dependency>
-
-        <!-- Hibernate Validator -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
         </dependency>
 
         <!-- DC3 Common Thread -->

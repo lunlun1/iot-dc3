@@ -18,7 +18,7 @@ import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.bean.point.PointValue;
 import io.github.pnoker.common.entity.Device;
 import io.github.pnoker.common.entity.Point;
-import io.github.pnoker.common.enums.AttributeTypeEnum;
+import io.github.pnoker.common.enums.AttributeTypeFlagEnum;
 import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
@@ -77,7 +77,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         Device device = driverContext.getDeviceByDeviceId(deviceId);
         try {
             Point point = driverContext.getPointByDeviceIdAndPointId(deviceId, pointId);
-            AttributeTypeEnum typeEnum = AttributeTypeEnum.of(point.getTypeFlag().getCode());
+            AttributeTypeFlagEnum typeEnum = AttributeTypeFlagEnum.of(point.getPointTypeFlag().getCode());
             return driverCustomService.write(
                     driverContext.getDriverInfoByDeviceId(deviceId),
                     driverContext.getPointInfoByDeviceIdAndPointId(deviceId, pointId),
