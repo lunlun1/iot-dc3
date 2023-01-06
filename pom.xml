@@ -20,6 +20,7 @@
         <groupId>io.github.pnoker</groupId>
         <artifactId>dc3-parent</artifactId>
         <version>2022.2.3</version>
+        <relativePath/>
     </parent>
 
     <name>${project.artifactId}</name>
