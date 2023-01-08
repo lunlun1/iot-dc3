@@ -59,16 +59,12 @@
 
     <dependencies>
 
-        <!-- Spring RabbitMq -->
+        <!-- Spring Configuration-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-
-        <!-- Spring Quartz -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- Tls Cert 相关 -->
@@ -77,10 +73,22 @@
             <artifactId>bcprov-jdk16</artifactId>
         </dependency>
 
+        <!-- DC3 Common RabbitMQ -->
+        <dependency>
+            <groupId>io.github.pnoker</groupId>
+            <artifactId>dc3-common-rabbitmq</artifactId>
+        </dependency>
+
         <!-- DC3 Common Thread -->
         <dependency>
             <groupId>io.github.pnoker</groupId>
             <artifactId>dc3-common-thread</artifactId>
+        </dependency>
+
+        <!-- DC3 Common Quartz -->
+        <dependency>
+            <groupId>io.github.pnoker</groupId>
+            <artifactId>dc3-common-quartz</artifactId>
         </dependency>
 
         <!-- DC3 Common Model -->
@@ -95,16 +103,16 @@
             <artifactId>dc3-common-public</artifactId>
         </dependency>
 
-        <!-- DC3 Common Profiles -->
-        <dependency>
-            <groupId>io.github.pnoker</groupId>
-            <artifactId>dc3-common-profiles</artifactId>
-        </dependency>
-
         <!-- DC3 Common Exception -->
         <dependency>
             <groupId>io.github.pnoker</groupId>
             <artifactId>dc3-common-exception</artifactId>
+        </dependency>
+
+        <!-- DC3 Common Log -->
+        <dependency>
+            <groupId>io.github.pnoker</groupId>
+            <artifactId>dc3-common-log</artifactId>
         </dependency>
 
     </dependencies>

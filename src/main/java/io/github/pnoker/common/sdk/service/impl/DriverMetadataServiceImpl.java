@@ -75,8 +75,8 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         Driver driver = new Driver();
         driver.setDriverName(driverProperty.getName());
         driver.setServiceName(this.serviceName);
-        driver.setServerHost(localHost);
-        driver.setServerPort(this.port);
+        driver.setServiceHost(localHost);
+        driver.setServicePort(this.port);
         driver.setDriverTypeFlag(driverProperty.getType());
         driver.setRemark(driverProperty.getRemark());
         log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getDriverName());
