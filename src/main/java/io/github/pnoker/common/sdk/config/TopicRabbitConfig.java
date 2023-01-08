@@ -16,11 +16,10 @@ package io.github.pnoker.common.sdk.config;
 
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,29 +37,6 @@ public class TopicRabbitConfig {
 
     @Value("${spring.application.name}")
     private String serviceName;
-
-    @Bean
-    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
-        rabbitTemplate.setMandatory(true);
-        rabbitTemplate.setReturnsCallback(message -> log.error("Send message({}) to exchange({}), routingKey({}) failed: {}", message.getMessage(), message.getExchange(), message.getRoutingKey(), message.getReplyText()));
-        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if (!ack) {
-                log.error("CorrelationData({}) ack failed: {}", correlationData, cause);
-            }
-        });
-        return rabbitTemplate;
-    }
-
-    @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(new Jackson2JsonMessageConverter());
-        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-        return factory;
-    }
 
     @Bean
     TopicExchange metadataExchange() {
