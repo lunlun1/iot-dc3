@@ -14,6 +14,7 @@
 
 package io.github.pnoker.common.sdk.config;
 
+import io.github.pnoker.common.constant.common.SymbolConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
@@ -44,6 +45,16 @@ public class TopicRabbitConfig {
     }
 
     @Bean
+    TopicExchange valueExchange() {
+        return new TopicExchange(RabbitConstant.TOPIC_EXCHANGE_VALUE, true, false);
+    }
+
+    @Bean
+    TopicExchange mqttExchange() {
+        return new TopicExchange(RabbitConstant.TOPIC_EXCHANGE_MQTT, true, false);
+    }
+
+    @Bean
     Queue driverMetadataQueue() {
         Map<String, Object> arguments = new HashMap<>();
         // 15秒：15 * 1000 = 15000L
@@ -52,11 +63,27 @@ public class TopicRabbitConfig {
     }
 
     @Bean
-    Binding driverMetadataBinding(TopicExchange metadataExchange, Queue driverMetadataQueue) {
+    Queue pointValueQueue() {
+        Map<String, Object> arguments = new HashMap<>();
+        // 30天： 30 * 24 * 60 * 60 * 1000 = 2592000000L
+        arguments.put(RabbitConstant.MESSAGE_TTL, 2592000000L);
+        return new Queue(RabbitConstant.QUEUE_POINT_VALUE, true, false, false, arguments);
+    }
+
+    @Bean
+    Binding metadataBinding(Queue driverMetadataQueue, TopicExchange metadataExchange) {
         return BindingBuilder
                 .bind(driverMetadataQueue)
                 .to(metadataExchange)
                 .with(RabbitConstant.ROUTING_DRIVER_METADATA_PREFIX + this.serviceName);
+    }
+
+    @Bean
+    Binding pointValueBinding(TopicExchange valueExchange, Queue pointValueQueue) {
+        return BindingBuilder
+                .bind(pointValueQueue)
+                .to(valueExchange)
+                .with(RabbitConstant.ROUTING_POINT_VALUE_PREFIX + SymbolConstant.ASTERISK);
     }
 
 }

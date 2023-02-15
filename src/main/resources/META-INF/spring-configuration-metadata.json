@@ -7,8 +7,8 @@
     },
     {
       "name": "driver.type",
-      "type": "java.lang.String",
-      "description": "Driver type, default:driver, driver|gateway...,."
+      "type": "io.github.pnoker.common.enums.DriverTypeFlagEnum",
+      "description": "Driver type."
     },
     {
       "name": "driver.tenant",
