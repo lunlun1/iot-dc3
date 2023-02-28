@@ -15,8 +15,8 @@
 package io.github.pnoker.common.sdk.service.job;
 
 import io.github.pnoker.common.bean.driver.AttributeInfo;
-import io.github.pnoker.common.entity.Device;
-import io.github.pnoker.common.entity.Point;
+import io.github.pnoker.common.model.Device;
+import io.github.pnoker.common.model.Point;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import lombok.extern.slf4j.Slf4j;

@@ -22,7 +22,7 @@ import io.github.pnoker.common.bean.entity.DriverEvent;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.exception.ServiceException;
-import io.github.pnoker.common.entity.*;
+import io.github.pnoker.common.model.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;

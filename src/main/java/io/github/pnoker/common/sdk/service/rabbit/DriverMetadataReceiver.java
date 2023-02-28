@@ -24,7 +24,7 @@ import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.common.PrefixConstant;
 import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.enums.ResponseEnum;
-import io.github.pnoker.common.entity.*;
+import io.github.pnoker.common.model.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
