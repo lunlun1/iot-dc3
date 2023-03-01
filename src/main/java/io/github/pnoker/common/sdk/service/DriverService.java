@@ -14,10 +14,10 @@
 
 package io.github.pnoker.common.sdk.service;
 
-import io.github.pnoker.common.bean.point.PointValue;
+import io.github.pnoker.common.entity.DeviceEvent;
+import io.github.pnoker.common.entity.DriverEvent;
+import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.StatusEnum;
-import io.github.pnoker.common.bean.entity.DeviceEvent;
-import io.github.pnoker.common.bean.entity.DriverEvent;
 
 import java.util.List;
 

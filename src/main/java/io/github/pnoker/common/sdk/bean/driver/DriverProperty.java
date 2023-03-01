@@ -14,9 +14,9 @@
 
 package io.github.pnoker.common.sdk.bean.driver;
 
+import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.model.DriverAttribute;
 import io.github.pnoker.common.model.PointAttribute;
-import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
 import io.github.pnoker.common.valid.Insert;
 import io.github.pnoker.common.valid.Update;

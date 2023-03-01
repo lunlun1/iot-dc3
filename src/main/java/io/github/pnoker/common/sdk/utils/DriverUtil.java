@@ -16,8 +16,8 @@ package io.github.pnoker.common.sdk.utils;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
-import io.github.pnoker.common.bean.driver.AttributeInfo;
 import io.github.pnoker.common.constant.common.ExceptionConstant;
+import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.enums.PointTypeFlagEnum;
 import io.github.pnoker.common.utils.DecodeUtil;
 import lombok.extern.slf4j.Slf4j;

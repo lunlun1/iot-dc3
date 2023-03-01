@@ -14,13 +14,15 @@
 
 package io.github.pnoker.common.sdk.bean.driver;
 
-import io.github.pnoker.common.bean.driver.AttributeInfo;
-import io.github.pnoker.common.bean.driver.DriverMetadata;
+import io.github.pnoker.common.entity.driver.AttributeInfo;
+import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.exception.NotFoundException;
 import io.github.pnoker.common.model.Device;
 import io.github.pnoker.common.model.Point;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,8 @@ import java.util.Optional;
 @Data
 @Slf4j
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class DriverContext {
 
     /**

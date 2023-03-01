@@ -15,7 +15,7 @@
 package io.github.pnoker.common.sdk.service.job;
 
 import io.github.pnoker.common.constant.driver.EventConstant;
-import io.github.pnoker.common.bean.entity.DriverEvent;
+import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverService;
 import lombok.extern.slf4j.Slf4j;

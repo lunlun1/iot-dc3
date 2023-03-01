@@ -14,7 +14,7 @@
 
 package io.github.pnoker.common.sdk.service;
 
-import io.github.pnoker.common.bean.point.PointValue;
+import io.github.pnoker.common.entity.point.PointValue;
 
 /**
  * 驱动指令服务

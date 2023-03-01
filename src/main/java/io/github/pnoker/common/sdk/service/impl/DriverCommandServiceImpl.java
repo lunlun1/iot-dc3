@@ -14,12 +14,12 @@
 
 package io.github.pnoker.common.sdk.service.impl;
 
-import io.github.pnoker.common.bean.driver.AttributeInfo;
-import io.github.pnoker.common.bean.point.PointValue;
-import io.github.pnoker.common.model.Device;
-import io.github.pnoker.common.model.Point;
+import io.github.pnoker.common.entity.driver.AttributeInfo;
+import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.AttributeTypeFlagEnum;
 import io.github.pnoker.common.exception.ServiceException;
+import io.github.pnoker.common.model.Device;
+import io.github.pnoker.common.model.Point;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import io.github.pnoker.common.sdk.service.DriverCustomService;

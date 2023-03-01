@@ -16,12 +16,12 @@ package io.github.pnoker.common.sdk.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import io.github.pnoker.common.bean.point.PointValue;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
+import io.github.pnoker.common.entity.DeviceEvent;
+import io.github.pnoker.common.entity.DriverEvent;
+import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.StatusEnum;
-import io.github.pnoker.common.bean.entity.DeviceEvent;
-import io.github.pnoker.common.bean.entity.DriverEvent;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
