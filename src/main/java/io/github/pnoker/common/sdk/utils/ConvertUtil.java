@@ -53,7 +53,7 @@ public class ConvertUtil {
             throw new UnSupportException("Unsupported type of {}", point.getPointTypeFlag());
         }
 
-        BigDecimal base = null != point.getBase() ? point.getBase() : new BigDecimal(0);
+        BigDecimal base = null != point.getBaseValue() ? point.getBaseValue() : new BigDecimal(0);
         BigDecimal multiple = null != point.getMultiple() ? point.getMultiple() : new BigDecimal(1);
         int decimal = null != point.getValueDecimal() ? point.getValueDecimal() : 6;
 
