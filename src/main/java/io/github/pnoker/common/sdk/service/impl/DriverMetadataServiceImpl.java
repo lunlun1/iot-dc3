@@ -81,6 +81,7 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         driver.setRemark(driverProperty.getRemark());
         log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getDriverName());
 
+        // todo 异步问题会导致顺序紊乱，从而注册失败
         registerHandshake();
         driverService.driverEventSender(new DriverEvent(
                 serviceName,
