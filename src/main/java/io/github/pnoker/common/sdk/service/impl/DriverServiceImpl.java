@@ -53,7 +53,6 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public void driverEventSender(DriverEvent driverEvent) {
         if (ObjectUtil.isNotNull(driverEvent)) {
-            log.debug("Send driver event: {}", JsonUtil.toJsonString(driverEvent));
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_EVENT,
                     RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + serviceName,
@@ -65,7 +64,6 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public void deviceEventSender(DeviceEvent deviceEvent) {
         if (ObjectUtil.isNotNull(deviceEvent)) {
-            log.debug("Send device event: {}", JsonUtil.toJsonString(deviceEvent));
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_EVENT,
                     RabbitConstant.ROUTING_DEVICE_EVENT_PREFIX + serviceName,

@@ -19,13 +19,13 @@
     <parent>
         <groupId>io.github.pnoker</groupId>
         <artifactId>dc3-parent</artifactId>
-        <version>2023.1.6</version>
+        <version>2023.1.9</version>
         <relativePath/>
     </parent>
 
     <name>${project.artifactId}</name>
     <artifactId>dc3-driver-sdk</artifactId>
-    <version>2023.1.6</version>
+    <version>2023.1.9</version>
     <packaging>jar</packaging>
 
     <inceptionYear>2016-2022</inceptionYear>
@@ -189,18 +189,5 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
