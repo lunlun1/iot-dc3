@@ -65,7 +65,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             driverService.pointValueSender(pointValue);
             return pointValue;
         } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
