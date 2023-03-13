@@ -28,12 +28,12 @@
     {
       "name": "driver.driver-attribute",
       "type": "java.util.List",
-      "description": "Driver attribute list<p/><p>- displayName: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
+      "description": "Driver attribute list<p/><p>- display name: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
     },
     {
       "name": "driver.point-attribute",
       "type": "java.util.List",
-      "description": "Device point attribute list<p/><p>- displayName: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
+      "description": "Device point attribute list<p/><p>- display name: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
     },
     {
       "name": "driver.schedule.status.enable",
