@@ -23,14 +23,12 @@ import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.driver.DriverRegister;
 import io.github.pnoker.common.enums.StatusEnum;
-import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.model.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.HostUtil;
-import io.github.pnoker.common.utils.RegexUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,38 +64,12 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
 
     @Override
     public void initial() {
-        String localHost = HostUtil.localHost();
-        if (!RegexUtil.isName(driverProperty.getName()) || !RegexUtil.isName(this.serviceName) || !RegexUtil.isHost(localHost)) {
-            throw new ServiceException("The driver name, service name or host name format is invalid");
-        }
-        if (!RegexUtil.isDriverPort(this.port)) {
-            throw new ServiceException("The driver port is invalid, port range is 8600-8799");
-        }
+        log.info("The driver {}/{} is initializing", this.serviceName, driverProperty.getName());
 
-        Driver driver = new Driver();
-        driver.setDriverName(driverProperty.getName());
-        driver.setServiceName(this.serviceName);
-        driver.setServiceHost(localHost);
-        driver.setServicePort(this.port);
-        driver.setDriverTypeFlag(driverProperty.getType());
-        driver.setRemark(driverProperty.getRemark());
-        log.info("The driver {}/{} is initializing", driver.getServiceName(), driver.getDriverName());
+        registerDriver();
+        syncDriverMetadata();
 
-        // todo 异步问题会导致顺序紊乱，从而注册失败
-        registerHandshake();
-        driverService.driverEventSender(new DriverEvent(
-                serviceName,
-                EventConstant.Driver.REGISTER,
-                new DriverRegister(
-                        driverProperty.getTenant(),
-                        driver,
-                        driverProperty.getDriverAttribute(),
-                        driverProperty.getPointAttribute()
-                )
-        ));
-        syncDriverMetadata(driver);
-
-        log.info("The driver {}/{} is initialized successfully", driver.getServiceName(), driver.getDriverName());
+        log.info("The driver {}/{} is initialized successfully.", this.serviceName, driverProperty.getName());
     }
 
     @Override
@@ -200,7 +172,10 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         }
     }
 
-    private void registerHandshake() {
+    /**
+     * 驱动注册
+     */
+    private void registerDriver() {
         try {
             threadPoolExecutor.submit(() -> {
                 driverService.driverEventSender(new DriverEvent(
@@ -212,30 +187,44 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
                 while (!StatusEnum.REGISTERING.equals(driverContext.getDriverStatus())) {
                     ThreadUtil.sleep(500);
                 }
-            }).get(5, TimeUnit.SECONDS);
+            }).get(15, TimeUnit.SECONDS);
+
+            Driver driver = new Driver();
+            driver.setDriverName(driverProperty.getName());
+            driver.setServiceName(this.serviceName);
+            driver.setServiceHost(HostUtil.localHost());
+            driver.setServicePort(this.port);
+            driver.setDriverTypeFlag(driverProperty.getType());
+            driver.setRemark(driverProperty.getRemark());
+
+            DriverRegister driverRegister = new DriverRegister(
+                    driverProperty.getTenant(),
+                    driver,
+                    driverProperty.getDriverAttribute(),
+                    driverProperty.getPointAttribute()
+            );
+            DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.REGISTER, driverRegister);
+            driverService.driverEventSender(driverEvent);
         } catch (Exception ignored) {
-            // TODO 待推敲
-            driverService.close("The driver initialization failed, Check whether dc3-center-manager are started normally");
+            driverService.close("The driver initialization failed, registration timed out.");
             Thread.currentThread().interrupt();
         }
     }
 
-    private void syncDriverMetadata(Driver driver) {
+    /**
+     * 同步驱动元数据
+     */
+    private void syncDriverMetadata() {
         try {
             threadPoolExecutor.submit(() -> {
-                driverService.driverEventSender(new DriverEvent(
-                        serviceName,
-                        EventConstant.Driver.METADATA_SYNC,
-                        driver.getServiceName()
-                ));
-
+                DriverEvent driverEvent = new DriverEvent(this.serviceName, EventConstant.Driver.METADATA_SYNC);
+                driverService.driverEventSender(driverEvent);
                 while (!StatusEnum.ONLINE.equals(driverContext.getDriverStatus())) {
                     ThreadUtil.sleep(500);
                 }
-            }).get(5, TimeUnit.MINUTES);
+            }).get(15, TimeUnit.MINUTES);
         } catch (Exception ignored) {
-            // TODO 待推敲
-            driverService.close("The driver initialization failed, Sync driver metadata from dc3-center-manager timeout");
+            driverService.close("The driver initialization failed, sync metadata timed out.");
             Thread.currentThread().interrupt();
         }
     }

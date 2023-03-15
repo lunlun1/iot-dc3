@@ -27,13 +27,13 @@
     },
     {
       "name": "driver.driver-attribute",
-      "type": "java.util.List",
-      "description": "Driver attribute list<p/><p>- display name: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
+      "type": "java.util.List<io.github.pnoker.common.model.DriverAttribute>",
+      "description": "Driver attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
     },
     {
       "name": "driver.point-attribute",
-      "type": "java.util.List",
-      "description": "Device point attribute list<p/><p>- display name: attribute display name<p>- name: attribute name<p>- type: string/int/double/float/long/boolean<p>- value: default value<p>- remark: description."
+      "type": "java.util.List<io.github.pnoker.common.model.PointAttribute>",
+      "description": "Device point attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
     },
     {
       "name": "driver.schedule.status.enable",

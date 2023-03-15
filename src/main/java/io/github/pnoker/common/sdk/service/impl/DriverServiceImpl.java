@@ -75,18 +75,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void deviceEventSender(String deviceId, String pointId, String type, String content) {
-        deviceEventSender(new DeviceEvent(deviceId, pointId, type, content));
-    }
-
-    @Override
     public void deviceStatusSender(String deviceId, StatusEnum status) {
         deviceEventSender(new DeviceEvent(deviceId, EventConstant.Device.STATUS, status));
     }
 
     @Override
     public void pointValueSender(PointValue pointValue) {
-        if (null != pointValue) {
+        if (ObjectUtil.isNotNull(pointValue)) {
             log.debug("Send point value: {}", JsonUtil.toJsonString(pointValue));
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_VALUE,
@@ -99,7 +94,7 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public void pointValueSender(List<PointValue> pointValues) {
         // TODO 需要添加新的队列支持list数据发送
-        if (null != pointValues) {
+        if (ObjectUtil.isNotNull(pointValues)) {
             pointValues.forEach(this::pointValueSender);
         }
     }

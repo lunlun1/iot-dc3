@@ -18,6 +18,7 @@ package io.github.pnoker.common.sdk.service.rabbit;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
 import io.github.pnoker.common.constant.common.PrefixConstant;
 import io.github.pnoker.common.constant.driver.EventConstant;
@@ -61,7 +62,7 @@ public class DriverMetadataReceiver {
     public void driverConfigurationReceive(Channel channel, Message message, DriverConfiguration driverConfiguration) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
-            if (null == driverConfiguration || CharSequenceUtil.isEmpty(driverConfiguration.getType()) || CharSequenceUtil.isEmpty(driverConfiguration.getCommand())) {
+            if (ObjectUtil.isNull(driverConfiguration) || CharSequenceUtil.isEmpty(driverConfiguration.getType()) || CharSequenceUtil.isEmpty(driverConfiguration.getCommand())) {
                 log.error("Invalid driver configuration {}", driverConfiguration);
                 return;
             }
@@ -118,7 +119,7 @@ public class DriverMetadataReceiver {
                 driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
                 driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
                 driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
-                log.info("The metadata synced successfully");
+                log.info("The metadata synced successfully.");
                 break;
             default:
                 break;

@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.bean.driver;
 
+import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.StatusEnum;
@@ -76,7 +77,7 @@ public class DriverContext {
      */
     public Map<String, Map<String, AttributeInfo>> getPointInfoByDeviceId(String deviceId) {
         Map<String, Map<String, AttributeInfo>> tmpMap = this.driverMetadata.getPointInfoMap().get(deviceId);
-        if (null == tmpMap || tmpMap.size() < 1) {
+        if (ObjectUtil.isNull(tmpMap) || tmpMap.size() < 1) {
             //todo 提示信息需要统一替换
             throw new NotFoundException("Device({}) does not exist", deviceId);
         }
@@ -92,7 +93,7 @@ public class DriverContext {
      */
     public Map<String, AttributeInfo> getPointInfoByDeviceIdAndPointId(String deviceId, String pointId) {
         Map<String, AttributeInfo> tmpMap = getPointInfoByDeviceId(deviceId).get(pointId);
-        if (null == tmpMap || tmpMap.size() < 1) {
+        if (ObjectUtil.isNull(tmpMap) || tmpMap.size() < 1) {
             throw new NotFoundException("Point({}) info does not exist", pointId);
         }
         return tmpMap;
@@ -106,7 +107,7 @@ public class DriverContext {
      */
     public Device getDeviceByDeviceId(String deviceId) {
         Device device = this.driverMetadata.getDeviceMap().get(deviceId);
-        if (null == device) {
+        if (ObjectUtil.isNull(device)) {
             throw new NotFoundException("Device({}) does not exist", deviceId);
         }
         return device;

@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.utils;
 
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMReader;
@@ -86,15 +87,18 @@ public class X509Util {
         try {
             String classPath = "classpath:";
             if (caCrtFile.startsWith(classPath)) {
-                reader = null != password ? new PEMReader(new InputStreamReader(X509Util.class.getResourceAsStream(caCrtFile.replace(classPath, ""))), password::toCharArray)
+                reader = ObjectUtil.isNotNull(password) ? new PEMReader(new InputStreamReader(X509Util.class.getResourceAsStream(caCrtFile.replace(classPath, ""))), password::toCharArray)
                         : new PEMReader(new InputStreamReader(X509Util.class.getResourceAsStream(caCrtFile.replace(classPath, ""))));
             } else {
-                reader = null != password ? new PEMReader(new InputStreamReader(new ByteArrayInputStream(Files.readAllBytes(Paths.get(caCrtFile)))), password::toCharArray)
+                reader = ObjectUtil.isNotNull(password) ? new PEMReader(new InputStreamReader(new ByteArrayInputStream(Files.readAllBytes(Paths.get(caCrtFile)))), password::toCharArray)
                         : new PEMReader(new InputStreamReader(new ByteArrayInputStream(Files.readAllBytes(Paths.get(caCrtFile)))));
             }
             return (T) reader.readObject();
         } finally {
-            if (null != reader) reader.close();
+            if (ObjectUtil.isNotNull(reader)) {
+                reader.close();
+            }
+            ;
         }
     }
 }

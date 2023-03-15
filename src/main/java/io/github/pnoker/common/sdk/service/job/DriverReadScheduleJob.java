@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.service.job;
 
+import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.model.Device;
 import io.github.pnoker.common.model.Point;
@@ -55,13 +56,13 @@ public class DriverReadScheduleJob extends QuartzJobBean {
         deviceMap.values().forEach(device -> {
             Set<String> profileIds = device.getProfileIds();
             Map<String, Map<String, AttributeInfo>> pointInfoMap = driverContext.getDriverMetadata().getPointInfoMap().get(device.getId());
-            if (null != pointInfoMap && null != profileIds) {
+            if (ObjectUtil.isNotNull(pointInfoMap) && ObjectUtil.isNotNull(profileIds)) {
                 profileIds.forEach(profileId -> {
                     Map<String, Point> pointMap = driverContext.getDriverMetadata().getProfilePointMap().get(profileId);
-                    if (null != pointMap) {
+                    if (ObjectUtil.isNotNull(pointMap)) {
                         pointMap.keySet().forEach(pointId -> {
                             Map<String, AttributeInfo> map = pointInfoMap.get(pointId);
-                            if (null != map) {
+                            if (ObjectUtil.isNotNull(map)) {
                                 threadPoolExecutor.execute(() -> driverCommandService.read(device.getId(), pointId));
                             }
                         });

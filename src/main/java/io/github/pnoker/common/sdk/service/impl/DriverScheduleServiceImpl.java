@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleConfig;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
@@ -46,9 +47,9 @@ public class DriverScheduleServiceImpl implements DriverScheduleService {
     @Override
     public void initial() {
         ScheduleProperty property = driverProperty.getSchedule();
-        if (null != property) {
-            if (null == property.getStatus()) {
-                property.setStatus(new ScheduleConfig(true, "0/5 * * * * ?"));
+        if (ObjectUtil.isNotNull(property)) {
+            if (ObjectUtil.isNull(property.getStatus())) {
+                property.setStatus(new ScheduleConfig(true, "0/15 * * * * ?"));
             }
             final String scheduleGroup = "DriverScheduleGroup";
             if (Boolean.TRUE.equals(property.getRead().getEnable())) {

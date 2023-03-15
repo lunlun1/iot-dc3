@@ -22,12 +22,14 @@ import io.github.pnoker.common.model.PointAttribute;
 import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
 import io.github.pnoker.common.valid.Insert;
 import io.github.pnoker.common.valid.Update;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -37,20 +39,51 @@ import java.util.List;
  * @author pnoker
  * @since 2022.1.0
  */
-@Setter
-@Getter
-@Validated({Insert.class, Update.class})
+@Data
+@Validated
+@NoArgsConstructor
+@AllArgsConstructor
 @ConfigurationProperties(prefix = "driver")
 public class DriverProperty {
-    @NotBlank(message = "name can't be empty")
+    /**
+     * 驱动名称
+     */
+    @NotBlank(message = "driver name can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
-            message = "Invalid name",
-            groups = {Insert.class, Update.class})
-    private String tenant;
+            message = "Invalid driver name")
     private String name;
+
+    /**
+     * 驱动类型
+     */
+    @NotNull(message = "driver type can't be empty")
     private DriverTypeFlagEnum type = DriverTypeFlagEnum.DRIVER;
+
+    /**
+     * 租户
+     */
+    @NotBlank(message = "driver tenant can't be empty")
+    @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
+            message = "Invalid driver tenant")
+    private String tenant;
+
+    /**
+     * 描述
+     */
     private String remark;
+
+    /**
+     * 定时任务相关属性
+     */
     private ScheduleProperty schedule;
+
+    /**
+     * 驱动属性
+     */
     private List<DriverAttribute> driverAttribute;
+
+    /**
+     * 位号属性
+     */
     private List<PointAttribute> pointAttribute;
 }
