@@ -16,7 +16,7 @@
 
 package io.github.pnoker.common.sdk.init;
 
-import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
+import io.github.pnoker.common.sdk.config.property.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverCustomService;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverScheduleService;
@@ -50,13 +50,13 @@ public class DriverInitRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // Initialize driver configuration
+        // 初始化驱动元数据，注册、数据同步
         driverMetadataService.initial();
 
-        // Initialize custom driver service
+        // 执行驱动模块的自定义初始化函数
         driverCustomService.initial();
 
-        // Initialize driver schedule service
+        // 初始化驱动任务，包括驱动状态、读和自定义任务
         driverScheduleService.initial();
     }
 }

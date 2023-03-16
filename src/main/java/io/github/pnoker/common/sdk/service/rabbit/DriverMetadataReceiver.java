@@ -26,7 +26,6 @@ import io.github.pnoker.common.constant.driver.MetadataConstant;
 import io.github.pnoker.common.entity.driver.DriverConfiguration;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.ResponseEnum;
-import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.model.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
@@ -104,26 +103,18 @@ public class DriverMetadataReceiver {
             driverService.close("The driver initialization failed: {}", driverConfiguration.getResponse());
         }
 
-        switch (driverConfiguration.getCommand()) {
-            case EventConstant.Driver.HANDSHAKE_BACK:
-                driverContext.setDriverStatus(StatusEnum.REGISTERING);
-                break;
-            case EventConstant.Driver.REGISTER_BACK:
-                driverContext.setDriverStatus(StatusEnum.ONLINE);
-                break;
-            case EventConstant.Driver.METADATA_SYNC_BACK:
-                String s = JsonUtil.toPrettyJsonString(driverConfiguration.getContent());
-                log.info(s);
-                DriverMetadata driverMetadata = JsonUtil.parseObject(s, DriverMetadata.class);
-                driverContext.setDriverMetadata(driverMetadata);
-                driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
-                driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
-                driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
-                log.info("The metadata synced successfully.");
-                break;
-            default:
-                break;
+        if (!EventConstant.Driver.REGISTER_BACK.equals(driverConfiguration.getCommand())) {
+            return;
         }
+
+        String s = JsonUtil.toPrettyJsonString(driverConfiguration.getContent());
+        log.info(s);
+        DriverMetadata driverMetadata = JsonUtil.parseObject(s, DriverMetadata.class);
+        driverContext.setDriverMetadata(driverMetadata);
+        driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
+        driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
+        driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
+        log.info("The metadata synced successfully.");
     }
 
     /**

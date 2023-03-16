@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.service.job;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.model.Device;
@@ -53,22 +54,32 @@ public class DriverReadScheduleJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         Map<String, Device> deviceMap = driverContext.getDriverMetadata().getDeviceMap();
-        deviceMap.values().forEach(device -> {
+        if (ObjectUtil.isNull(deviceMap)) {
+            return;
+        }
+
+        for (Device device : deviceMap.values()) {
             Set<String> profileIds = device.getProfileIds();
             Map<String, Map<String, AttributeInfo>> pointInfoMap = driverContext.getDriverMetadata().getPointInfoMap().get(device.getId());
-            if (ObjectUtil.isNotNull(pointInfoMap) && ObjectUtil.isNotNull(profileIds)) {
-                profileIds.forEach(profileId -> {
-                    Map<String, Point> pointMap = driverContext.getDriverMetadata().getProfilePointMap().get(profileId);
-                    if (ObjectUtil.isNotNull(pointMap)) {
-                        pointMap.keySet().forEach(pointId -> {
-                            Map<String, AttributeInfo> map = pointInfoMap.get(pointId);
-                            if (ObjectUtil.isNotNull(map)) {
-                                threadPoolExecutor.execute(() -> driverCommandService.read(device.getId(), pointId));
-                            }
-                        });
-                    }
-                });
+            if (CollUtil.isEmpty(profileIds) || ObjectUtil.isNull(pointInfoMap)) {
+                continue;
             }
-        });
+
+            for (String profileId : profileIds) {
+                Map<String, Point> pointMap = driverContext.getDriverMetadata().getProfilePointMap().get(profileId);
+                if (ObjectUtil.isNull(pointMap)) {
+                    continue;
+                }
+
+                for (String pointId : pointMap.keySet()) {
+                    Map<String, AttributeInfo> map = pointInfoMap.get(pointId);
+                    if (ObjectUtil.isNull(map)) {
+                        continue;
+                    }
+
+                    threadPoolExecutor.execute(() -> driverCommandService.read(device.getId(), pointId));
+                }
+            }
+        }
     }
 }

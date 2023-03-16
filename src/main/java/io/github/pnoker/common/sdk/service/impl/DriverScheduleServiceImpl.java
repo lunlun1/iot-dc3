@@ -17,9 +17,9 @@
 package io.github.pnoker.common.sdk.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
-import io.github.pnoker.common.sdk.bean.schedule.ScheduleConfig;
-import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
+import io.github.pnoker.common.constant.driver.ScheduleConstant;
+import io.github.pnoker.common.sdk.config.property.DriverProperty;
+import io.github.pnoker.common.sdk.config.property.ScheduleProperty;
 import io.github.pnoker.common.sdk.service.DriverScheduleService;
 import io.github.pnoker.common.sdk.service.job.DriverCustomScheduleJob;
 import io.github.pnoker.common.sdk.service.job.DriverReadScheduleJob;
@@ -47,28 +47,24 @@ public class DriverScheduleServiceImpl implements DriverScheduleService {
     @Override
     public void initial() {
         ScheduleProperty property = driverProperty.getSchedule();
-        if (ObjectUtil.isNotNull(property)) {
-            if (ObjectUtil.isNull(property.getStatus())) {
-                property.setStatus(new ScheduleConfig(true, "0/15 * * * * ?"));
-            }
-            final String scheduleGroup = "DriverScheduleGroup";
-            if (Boolean.TRUE.equals(property.getRead().getEnable())) {
-                createScheduleJobWithCorn(scheduleGroup, "ReadScheduleJob", property.getRead().getCorn(), DriverReadScheduleJob.class);
-            }
-            if (Boolean.TRUE.equals(property.getCustom().getEnable())) {
-                createScheduleJobWithCorn(scheduleGroup, "CustomScheduleJob", property.getCustom().getCorn(), DriverCustomScheduleJob.class);
-            }
-            if (Boolean.TRUE.equals(property.getStatus().getEnable())) {
-                createScheduleJobWithCorn(scheduleGroup, "StatusScheduleJob", property.getStatus().getCorn(), DriverStatusScheduleJob.class);
-            }
+        if (ObjectUtil.isNull(property)) {
+            return;
+        }
 
-            try {
-                if (!scheduler.isShutdown()) {
-                    scheduler.start();
-                }
-            } catch (SchedulerException e) {
-                log.error(e.getMessage(), e);
+        if (Boolean.TRUE.equals(property.getRead().getEnable())) {
+            createScheduleJobWithCorn(ScheduleConstant.DRIVER_SCHEDULE_GROUP, ScheduleConstant.READ_SCHEDULE_JOB, property.getRead().getCorn(), DriverReadScheduleJob.class);
+        }
+        if (Boolean.TRUE.equals(property.getCustom().getEnable())) {
+            createScheduleJobWithCorn(ScheduleConstant.DRIVER_SCHEDULE_GROUP, ScheduleConstant.CUSTOM_SCHEDULE_JOB, property.getCustom().getCorn(), DriverCustomScheduleJob.class);
+        }
+        createScheduleJobWithCorn(ScheduleConstant.DRIVER_SCHEDULE_GROUP, ScheduleConstant.STATUS_SCHEDULE_JOB, ScheduleConstant.DRIVER_STATUS_CORN, DriverStatusScheduleJob.class);
+
+        try {
+            if (!scheduler.isShutdown()) {
+                scheduler.start();
             }
+        } catch (SchedulerException e) {
+            log.error("Driver schedule initial error: {}", e.getMessage(), e);
         }
     }
 

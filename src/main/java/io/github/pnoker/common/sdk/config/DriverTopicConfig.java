@@ -17,7 +17,6 @@
 package io.github.pnoker.common.sdk.config;
 
 import io.github.pnoker.common.config.TopicConfig;
-import io.github.pnoker.common.constant.common.SymbolConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.common.utils.EnvironmentUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -53,27 +52,11 @@ public class DriverTopicConfig {
     private TopicExchange metadataExchange;
 
     @Bean
-    Queue driverEventQueue() {
-        Map<String, Object> arguments = new HashMap<>();
-        // 15秒：15 * 1000 = 15000L
-        arguments.put(RabbitConstant.MESSAGE_TTL, 15000L);
-        return new Queue(RabbitConstant.QUEUE_DRIVER_EVENT, true, false, EnvironmentUtil.isDev(env), arguments);
-    }
-
-    @Bean
     Queue driverMetadataQueue() {
         Map<String, Object> arguments = new HashMap<>();
-        // 15秒：15 * 1000 = 15000L
-        arguments.put(RabbitConstant.MESSAGE_TTL, 15000L);
+        // 30秒：30 * 1000 = 30000L
+        arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
         return new Queue(RabbitConstant.QUEUE_DRIVER_METADATA_PREFIX + this.serviceName, false, false, EnvironmentUtil.isDev(env), arguments);
-    }
-
-    @Bean
-    Binding driverEventBinding(Queue driverEventQueue) {
-        return BindingBuilder
-                .bind(driverEventQueue)
-                .to(eventExchange)
-                .with(RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + SymbolConstant.ASTERISK);
     }
 
     @Bean

@@ -16,16 +16,14 @@
 
 package io.github.pnoker.common.sdk.service.impl;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.driver.DriverRegister;
-import io.github.pnoker.common.enums.StatusEnum;
 import io.github.pnoker.common.model.*;
 import io.github.pnoker.common.sdk.bean.driver.DriverContext;
-import io.github.pnoker.common.sdk.bean.driver.DriverProperty;
+import io.github.pnoker.common.sdk.config.property.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.HostUtil;
@@ -36,7 +34,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Driver Metadata Service Implements
@@ -66,8 +63,27 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
     public void initial() {
         log.info("The driver {}/{} is initializing", this.serviceName, driverProperty.getName());
 
-        registerDriver();
-        syncDriverMetadata();
+        try {
+            Driver driver = new Driver();
+            driver.setDriverName(driverProperty.getName());
+            driver.setServiceName(this.serviceName);
+            driver.setServiceHost(HostUtil.localHost());
+            driver.setServicePort(this.port);
+            driver.setDriverTypeFlag(driverProperty.getType());
+            driver.setRemark(driverProperty.getRemark());
+
+            DriverRegister driverRegister = new DriverRegister(
+                    driverProperty.getTenant(),
+                    driver,
+                    driverProperty.getDriverAttribute(),
+                    driverProperty.getPointAttribute()
+            );
+            DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.REGISTER, driverRegister);
+            driverService.driverEventSender(driverEvent);
+        } catch (Exception ignored) {
+            driverService.close("The driver initialization failed, registration timed out.");
+            Thread.currentThread().interrupt();
+        }
 
         log.info("The driver {}/{} is initialized successfully.", this.serviceName, driverProperty.getName());
     }
@@ -172,60 +188,4 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
         }
     }
 
-    /**
-     * 驱动注册
-     */
-    private void registerDriver() {
-        try {
-            threadPoolExecutor.submit(() -> {
-                driverService.driverEventSender(new DriverEvent(
-                        serviceName,
-                        EventConstant.Driver.HANDSHAKE,
-                        null
-                ));
-
-                while (!StatusEnum.REGISTERING.equals(driverContext.getDriverStatus())) {
-                    ThreadUtil.sleep(500);
-                }
-            }).get(15, TimeUnit.SECONDS);
-
-            Driver driver = new Driver();
-            driver.setDriverName(driverProperty.getName());
-            driver.setServiceName(this.serviceName);
-            driver.setServiceHost(HostUtil.localHost());
-            driver.setServicePort(this.port);
-            driver.setDriverTypeFlag(driverProperty.getType());
-            driver.setRemark(driverProperty.getRemark());
-
-            DriverRegister driverRegister = new DriverRegister(
-                    driverProperty.getTenant(),
-                    driver,
-                    driverProperty.getDriverAttribute(),
-                    driverProperty.getPointAttribute()
-            );
-            DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.REGISTER, driverRegister);
-            driverService.driverEventSender(driverEvent);
-        } catch (Exception ignored) {
-            driverService.close("The driver initialization failed, registration timed out.");
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * 同步驱动元数据
-     */
-    private void syncDriverMetadata() {
-        try {
-            threadPoolExecutor.submit(() -> {
-                DriverEvent driverEvent = new DriverEvent(this.serviceName, EventConstant.Driver.METADATA_SYNC);
-                driverService.driverEventSender(driverEvent);
-                while (!StatusEnum.ONLINE.equals(driverContext.getDriverStatus())) {
-                    ThreadUtil.sleep(500);
-                }
-            }).get(15, TimeUnit.MINUTES);
-        } catch (Exception ignored) {
-            driverService.close("The driver initialization failed, sync metadata timed out.");
-            Thread.currentThread().interrupt();
-        }
-    }
 }

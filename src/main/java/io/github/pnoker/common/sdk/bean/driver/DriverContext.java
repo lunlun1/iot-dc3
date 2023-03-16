@@ -51,9 +51,9 @@ public class DriverContext {
     private DriverMetadata driverMetadata = new DriverMetadata();
 
     /**
-     * 驱动 状态，默认为 未注册 状态
+     * 驱动 状态，默认为：注册中
      */
-    private StatusEnum driverStatus = StatusEnum.UNREGISTERED;
+    private StatusEnum driverStatus = StatusEnum.REGISTERING;
 
     public synchronized void setDriverStatus(StatusEnum driverStatus) {
         this.driverStatus = driverStatus;
@@ -78,7 +78,6 @@ public class DriverContext {
     public Map<String, Map<String, AttributeInfo>> getPointInfoByDeviceId(String deviceId) {
         Map<String, Map<String, AttributeInfo>> tmpMap = this.driverMetadata.getPointInfoMap().get(deviceId);
         if (ObjectUtil.isNull(tmpMap) || tmpMap.size() < 1) {
-            //todo 提示信息需要统一替换
             throw new NotFoundException("Device({}) does not exist", deviceId);
         }
         return tmpMap;

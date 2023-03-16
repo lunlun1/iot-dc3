@@ -21,9 +21,9 @@
       "description": "Driver project."
     },
     {
-      "name": "driver.description",
+      "name": "driver.remark",
       "type": "java.lang.String",
-      "description": "Driver description."
+      "description": "Driver remark."
     },
     {
       "name": "driver.driver-attribute",
@@ -34,16 +34,6 @@
       "name": "driver.point-attribute",
       "type": "java.util.List<io.github.pnoker.common.model.PointAttribute>",
       "description": "Device point attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
-    },
-    {
-      "name": "driver.schedule.status.enable",
-      "type": "java.lang.Boolean",
-      "description": "Driver status schedule status."
-    },
-    {
-      "name": "driver.schedule.status.corn",
-      "type": "java.lang.String",
-      "description": "Driver status schedule corn."
     },
     {
       "name": "driver.schedule.read.enable",
@@ -97,17 +87,17 @@
     },
     {
       "name": "driver.mqtt.auth-type",
-      "type": "io.github.pnoker.common.sdk.bean.mqtt.MqttProperties.AuthTypeEnum",
+      "type": "io.github.pnoker.common.sdk.config.property.MqttProperties.AuthTypeEnum",
       "description": "mqtt auth type."
     },
     {
       "name": "driver.mqtt.receive-topics",
-      "type": "java.util.List<io.github.pnoker.common.sdk.bean.mqtt.MqttProperties.Topic>",
+      "type": "java.util.List<io.github.pnoker.common.sdk.config.property.MqttProperties.Topic>",
       "description": "Driver receive topics(string list) for mqtt server."
     },
     {
       "name": "driver.mqtt.default-send-topic",
-      "type": "io.github.pnoker.common.sdk.bean.mqtt.MqttProperties.Topic",
+      "type": "io.github.pnoker.common.sdk.config.property.MqttProperties.Topic",
       "description": "Driver default sent topic for mqtt server."
     },
     {

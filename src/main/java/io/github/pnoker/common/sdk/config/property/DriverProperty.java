@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.bean.driver;
+package io.github.pnoker.common.sdk.config.property;
 
 import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.model.DriverAttribute;
 import io.github.pnoker.common.model.PointAttribute;
-import io.github.pnoker.common.sdk.bean.schedule.ScheduleProperty;
-import io.github.pnoker.common.valid.Insert;
-import io.github.pnoker.common.valid.Update;
+import io.github.pnoker.common.sdk.config.property.ScheduleProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,7 +46,7 @@ public class DriverProperty {
     /**
      * 驱动名称
      */
-    @NotBlank(message = "driver name can't be empty")
+    @NotBlank(message = "Driver name can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
             message = "Invalid driver name")
     private String name;
@@ -56,13 +54,13 @@ public class DriverProperty {
     /**
      * 驱动类型
      */
-    @NotNull(message = "driver type can't be empty")
+    @NotNull(message = "Driver type can't be empty")
     private DriverTypeFlagEnum type = DriverTypeFlagEnum.DRIVER;
 
     /**
      * 租户
      */
-    @NotBlank(message = "driver tenant can't be empty")
+    @NotBlank(message = "Tenant can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
             message = "Invalid driver tenant")
     private String tenant;
