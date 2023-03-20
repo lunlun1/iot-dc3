@@ -107,9 +107,19 @@ public class DriverMetadataReceiver {
             return;
         }
 
-        String s = JsonUtil.toPrettyJsonString(driverConfiguration.getContent());
-        log.info(s);
-        DriverMetadata driverMetadata = JsonUtil.parseObject(s, DriverMetadata.class);
+        if (ObjectUtil.isNull(driverConfiguration.getContent())) {
+            return;
+        }
+
+        String content = JsonUtil.toPrettyJsonString(driverConfiguration.getContent());
+        if (CharSequenceUtil.isEmpty(content)) {
+            return;
+        }
+        DriverMetadata driverMetadata = JsonUtil.parseObject(content, DriverMetadata.class);
+        if (ObjectUtil.isNull(driverMetadata)) {
+            driverMetadata = new DriverMetadata();
+        }
+        log.info(content);
         driverContext.setDriverMetadata(driverMetadata);
         driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
         driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
