@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.config.property;
+package io.github.pnoker.common.sdk.property;
 
 import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.model.DriverAttribute;
 import io.github.pnoker.common.model.PointAttribute;
-import io.github.pnoker.common.sdk.config.property.ScheduleProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

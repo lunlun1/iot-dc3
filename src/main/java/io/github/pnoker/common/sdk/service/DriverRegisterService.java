@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.bean.mqtt;
-
-import io.github.pnoker.common.utils.JsonUtil;
-import lombok.Data;
+package io.github.pnoker.common.sdk.service;
 
 /**
  * @author pnoker
  * @since 2022.1.0
  */
-@Data
-public class MessagePayload {
-    private String payload;
-    private MessageType messageType;
+public interface DriverRegisterService {
 
-    public MessagePayload() {
-        this.messageType = MessageType.DEFAULT;
-    }
-
-    public MessagePayload(Object payload, MessageType messageType) {
-        this.payload = JsonUtil.toJsonString(payload);
-        this.messageType = messageType;
-    }
+    /**
+     * 驱动注册
+     */
+    void register();
 }

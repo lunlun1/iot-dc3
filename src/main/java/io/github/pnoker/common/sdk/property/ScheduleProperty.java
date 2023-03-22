@@ -14,22 +14,42 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.bean.mqtt;
+package io.github.pnoker.common.sdk.property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 /**
+ * 驱动配置文件 driver.schedule 字段内容
+ *
  * @author pnoker
  * @since 2022.1.0
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class MqttMessage implements Serializable {
-    private MessageHeader messageHeader;
-    private MessagePayload messagePayload;
+public class ScheduleProperty {
+
+    /**
+     * 读任务配置
+     */
+    private ScheduleConfig read;
+
+    /**
+     * 自定义任务配置
+     */
+    private ScheduleConfig custom;
+
+    /**
+     * 驱动调度任务配置
+     *
+     * @author pnoker
+     * @since 2022.1.0
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ScheduleConfig {
+        private Boolean enable = false;
+        private String corn = "* */15 * * * ?";
+    }
 }

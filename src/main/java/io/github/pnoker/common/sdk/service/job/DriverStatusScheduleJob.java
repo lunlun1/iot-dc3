@@ -18,7 +18,7 @@ package io.github.pnoker.common.sdk.service.job;
 
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.entity.DriverEvent;
-import io.github.pnoker.common.sdk.bean.driver.DriverContext;
+import io.github.pnoker.common.sdk.bean.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -28,7 +28,6 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 自定义调度任务
@@ -49,7 +48,7 @@ public class DriverStatusScheduleJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.STATUS, driverContext.getDriverStatus(), 10, TimeUnit.SECONDS);
+        DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.STATUS, driverContext.getDriverStatus());
         driverService.driverEventSender(driverEvent);
     }
 }

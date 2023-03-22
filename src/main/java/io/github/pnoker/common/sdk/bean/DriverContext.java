@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.bean.driver;
+package io.github.pnoker.common.sdk.bean;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;

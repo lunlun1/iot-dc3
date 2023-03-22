@@ -22,8 +22,8 @@ import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.driver.DriverRegister;
 import io.github.pnoker.common.model.*;
-import io.github.pnoker.common.sdk.bean.driver.DriverContext;
-import io.github.pnoker.common.sdk.config.property.DriverProperty;
+import io.github.pnoker.common.sdk.bean.DriverContext;
+import io.github.pnoker.common.sdk.property.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.HostUtil;
@@ -45,48 +45,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Service
 public class DriverMetadataServiceImpl implements DriverMetadataService {
 
-    @Value("${server.port}")
-    private int port;
-    @Value("${spring.application.name}")
-    private String serviceName;
-
     @Resource
     private DriverContext driverContext;
-    @Resource
-    private DriverService driverService;
-    @Resource
-    private DriverProperty driverProperty;
-    @Resource
-    private ThreadPoolExecutor threadPoolExecutor;
-
-    @Override
-    public void initial() {
-        log.info("The driver {}/{} is initializing", this.serviceName, driverProperty.getName());
-
-        try {
-            Driver driver = new Driver();
-            driver.setDriverName(driverProperty.getName());
-            driver.setServiceName(this.serviceName);
-            driver.setServiceHost(HostUtil.localHost());
-            driver.setServicePort(this.port);
-            driver.setDriverTypeFlag(driverProperty.getType());
-            driver.setRemark(driverProperty.getRemark());
-
-            DriverRegister driverRegister = new DriverRegister(
-                    driverProperty.getTenant(),
-                    driver,
-                    driverProperty.getDriverAttribute(),
-                    driverProperty.getPointAttribute()
-            );
-            DriverEvent driverEvent = new DriverEvent(serviceName, EventConstant.Driver.REGISTER, driverRegister);
-            driverService.driverEventSender(driverEvent);
-        } catch (Exception ignored) {
-            driverService.close("The driver initialization failed, registration timed out.");
-            Thread.currentThread().interrupt();
-        }
-
-        log.info("The driver {}/{} is initialized successfully.", this.serviceName, driverProperty.getName());
-    }
 
     @Override
     public void upsertProfile(Profile profile) {

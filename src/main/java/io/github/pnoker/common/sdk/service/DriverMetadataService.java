@@ -25,11 +25,6 @@ import io.github.pnoker.common.model.*;
 public interface DriverMetadataService {
 
     /**
-     * 初始化 SDK
-     */
-    void initial();
-
-    /**
      * 向 DeviceDriver 中添加模板
      *
      * @param profile Profile

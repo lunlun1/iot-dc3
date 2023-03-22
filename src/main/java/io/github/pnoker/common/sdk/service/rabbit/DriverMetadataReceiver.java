@@ -27,7 +27,7 @@ import io.github.pnoker.common.entity.driver.DriverConfiguration;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.ResponseEnum;
 import io.github.pnoker.common.model.*;
-import io.github.pnoker.common.sdk.bean.driver.DriverContext;
+import io.github.pnoker.common.sdk.bean.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.JsonUtil;
@@ -99,10 +99,6 @@ public class DriverMetadataReceiver {
      * @param driverConfiguration DriverConfiguration
      */
     private void configurationDriver(DriverConfiguration driverConfiguration) {
-        if (!ResponseEnum.OK.equals(driverConfiguration.getResponse())) {
-            driverService.close("The driver initialization failed: {}", driverConfiguration.getResponse());
-        }
-
         if (!EventConstant.Driver.REGISTER_BACK.equals(driverConfiguration.getCommand())) {
             return;
         }

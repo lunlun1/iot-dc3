@@ -22,7 +22,7 @@ import io.github.pnoker.common.enums.AttributeTypeFlagEnum;
 import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.model.Device;
 import io.github.pnoker.common.model.Point;
-import io.github.pnoker.common.sdk.bean.driver.DriverContext;
+import io.github.pnoker.common.sdk.bean.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import io.github.pnoker.common.sdk.service.DriverCustomService;
 import io.github.pnoker.common.sdk.service.DriverService;
