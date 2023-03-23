@@ -16,17 +16,20 @@
 
 package io.github.pnoker.common.sdk.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import io.github.pnoker.common.dto.DeviceCommandDTO;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.AttributeTypeFlagEnum;
 import io.github.pnoker.common.exception.ServiceException;
 import io.github.pnoker.common.model.Device;
 import io.github.pnoker.common.model.Point;
-import io.github.pnoker.common.sdk.bean.DriverContext;
+import io.github.pnoker.common.sdk.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverCommandService;
 import io.github.pnoker.common.sdk.service.DriverCustomService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.sdk.utils.ConvertUtil;
+import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +50,6 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     @Resource
     private DriverCustomService driverCustomService;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public PointValue read(String deviceId, String pointId) {
         Device device = driverContext.getDeviceByDeviceId(deviceId);
@@ -71,9 +71,16 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public void commandRead(DeviceCommandDTO entityDTO) {
+        DeviceCommandDTO.DeviceRead deviceRead = JsonUtil.parseObject(entityDTO.getContent(), DeviceCommandDTO.DeviceRead.class);
+        if (ObjectUtil.isNull(deviceRead)) {
+            return;
+        }
+
+        PointValue read = read(deviceRead.getDeviceId(), deviceRead.getPointId());
+    }
+
     @Override
     public Boolean write(String deviceId, String pointId, String value) {
         Device device = driverContext.getDeviceByDeviceId(deviceId);
@@ -89,6 +96,16 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public void commandWrite(DeviceCommandDTO entityDTO) {
+        DeviceCommandDTO.DeviceWrite deviceWrite = JsonUtil.parseObject(entityDTO.getContent(), DeviceCommandDTO.DeviceWrite.class);
+        if (ObjectUtil.isNull(deviceWrite)) {
+            return;
+        }
+
+        Boolean write = write(deviceWrite.getDeviceId(), deviceWrite.getPointId(), deviceWrite.getValue());
     }
 
 }

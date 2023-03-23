@@ -19,7 +19,9 @@ package io.github.pnoker.common.sdk.service.impl;
 import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.entity.driver.DriverRegister;
 import io.github.pnoker.common.enums.DriverEventTypeEnum;
+import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.model.Driver;
+import io.github.pnoker.common.sdk.DriverContext;
 import io.github.pnoker.common.sdk.property.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverRegisterService;
 import io.github.pnoker.common.sdk.service.DriverService;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * Driver Metadata Service Implements
+ * 驱动注册接口实现
  *
  * @author pnoker
  * @since 2022.1.0
@@ -41,7 +43,7 @@ import javax.annotation.Resource;
 @Service
 public class DriverRegisterServiceImpl implements DriverRegisterService {
 
-    @Value("${server.port}")
+    @Value("${server.port:0}")
     private int port;
     @Value("${spring.application.name}")
     private String serviceName;
@@ -50,6 +52,8 @@ public class DriverRegisterServiceImpl implements DriverRegisterService {
     private DriverService driverService;
     @Resource
     private DriverProperty driverProperty;
+    @Resource
+    private DriverContext driverContext;
 
     @Override
     public void register() {
@@ -77,6 +81,7 @@ public class DriverRegisterServiceImpl implements DriverRegisterService {
             Thread.currentThread().interrupt();
         }
 
+        driverContext.setDriverStatus(DriverStatusEnum.ONLINE);
         log.info("The driver {}/{} is initialized successfully.", this.serviceName, driverProperty.getName());
     }
 }

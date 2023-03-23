@@ -17,6 +17,8 @@
 package io.github.pnoker.common.sdk.service;
 
 /**
+ * 驱动注册相关接口
+ *
  * @author pnoker
  * @since 2022.1.0
  */

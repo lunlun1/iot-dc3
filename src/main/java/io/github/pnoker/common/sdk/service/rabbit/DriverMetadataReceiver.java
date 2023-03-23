@@ -16,7 +16,6 @@
 
 package io.github.pnoker.common.sdk.service.rabbit;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
 import io.github.pnoker.common.dto.DriverMetadataDTO;
@@ -50,14 +49,13 @@ public class DriverMetadataReceiver {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
             log.debug("Receive driver metadata: {}", JsonUtil.toPrettyJsonString(entityDTO));
             if (ObjectUtil.isNull(entityDTO)
-                    || ObjectUtil.isNull(entityDTO.getMetadataType())
-                    || ObjectUtil.isNull(entityDTO.getMetadataCommandType())
-                    || CharSequenceUtil.isEmpty(entityDTO.getContent())) {
+                    || ObjectUtil.isNull(entityDTO.getType())
+                    || ObjectUtil.isNull(entityDTO.getMetadataCommandType())) {
                 log.error("Invalid driver metadata: {}", entityDTO);
                 return;
             }
 
-            switch (entityDTO.getMetadataType()) {
+            switch (entityDTO.getType()) {
                 case DRIVER:
                     driverMetadataService.driverMetadata(entityDTO);
                     break;

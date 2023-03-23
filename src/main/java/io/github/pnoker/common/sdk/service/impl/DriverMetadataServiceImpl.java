@@ -22,7 +22,7 @@ import io.github.pnoker.common.dto.DriverMetadataDTO;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.MetadataCommandTypeEnum;
 import io.github.pnoker.common.model.*;
-import io.github.pnoker.common.sdk.bean.DriverContext;
+import io.github.pnoker.common.sdk.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
 import io.github.pnoker.common.sdk.service.DriverMetadataTempService;
 import io.github.pnoker.common.utils.JsonUtil;
@@ -56,18 +56,17 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
             return;
         }
 
-        String content = JsonUtil.toPrettyJsonString(entityDTO.getContent());
-        if (CharSequenceUtil.isEmpty(content)) {
+        if (CharSequenceUtil.isEmpty(entityDTO.getContent())) {
             return;
         }
-        DriverMetadata driverMetadata = JsonUtil.parseObject(content, DriverMetadata.class);
+        DriverMetadata driverMetadata = JsonUtil.parseObject(entityDTO.getContent(), DriverMetadata.class);
         if (ObjectUtil.isNull(driverMetadata)) {
             driverMetadata = new DriverMetadata();
         }
         driverContext.setDriverMetadata(driverMetadata);
-        driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
-        driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
-        driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
+        driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getAttributeName(), JsonUtil.toPrettyJsonString(driverAttribute)));
+        driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getAttributeName(), JsonUtil.toPrettyJsonString(pointAttribute)));
+        driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toPrettyJsonString(device)));
         log.info("The metadata synced successfully.");
     }
 

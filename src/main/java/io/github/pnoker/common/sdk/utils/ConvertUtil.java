@@ -99,12 +99,8 @@ public class ConvertUtil {
      */
     private static byte convertByte(String content, BigDecimal base, BigDecimal multiple) {
         try {
-            byte value = Byte.parseByte(content);
-            float v = (value + base.byteValue()) * multiple.byteValue();
-            if (Float.isInfinite(value)) {
-                throw new OutRangeException();
-            }
-            return Byte.parseByte(String.valueOf(v));
+            BigDecimal multiply = linear(multiple, content, base);
+            return multiply.byteValue();
         } catch (Exception e) {
             throw new OutRangeException("Out of byte range: {} ~ {}, current: {}", Byte.MIN_VALUE, Byte.MAX_VALUE, content);
         }
@@ -119,12 +115,8 @@ public class ConvertUtil {
      */
     private static short convertShort(String content, BigDecimal base, BigDecimal multiple) {
         try {
-            short value = Short.parseShort(content);
-            float v = (value + base.shortValue()) * multiple.shortValue();
-            if (Float.isInfinite(value)) {
-                throw new OutRangeException();
-            }
-            return Short.parseShort(String.valueOf(v));
+            BigDecimal multiply = linear(multiple, content, base);
+            return multiply.shortValue();
         } catch (Exception e) {
             throw new OutRangeException("Out of short range: {} ~ {}, current: {}", Short.MIN_VALUE, Short.MAX_VALUE, content);
         }
@@ -139,12 +131,8 @@ public class ConvertUtil {
      */
     private static int convertInteger(String content, BigDecimal base, BigDecimal multiple) {
         try {
-            int value = Integer.parseInt(content);
-            float v = (value + base.intValue()) * multiple.intValue();
-            if (Float.isInfinite(value)) {
-                throw new OutRangeException();
-            }
-            return Integer.parseInt(String.valueOf(v));
+            BigDecimal multiply = linear(multiple, content, base);
+            return multiply.intValue();
         } catch (Exception e) {
             throw new OutRangeException("Out of int range: {} ~ {}, current: {}", Integer.MIN_VALUE, Integer.MAX_VALUE, content);
         }
@@ -159,12 +147,8 @@ public class ConvertUtil {
      */
     private static long convertLong(String content, BigDecimal base, BigDecimal multiple) {
         try {
-            long value = Long.parseLong(content);
-            float v = (value + base.longValue()) * multiple.longValue();
-            if (Float.isInfinite(value)) {
-                throw new OutRangeException();
-            }
-            return Long.parseLong(String.valueOf(v));
+            BigDecimal multiply = linear(multiple, content, base);
+            return multiply.longValue();
         } catch (Exception e) {
             throw new OutRangeException("Out of long range: {} ~ {}, current: {}", Long.MIN_VALUE, Long.MAX_VALUE, content);
         }
@@ -178,12 +162,11 @@ public class ConvertUtil {
      */
     private static float convertFloat(String content, BigDecimal base, BigDecimal multiple, int decimal) {
         try {
-            float value = Float.parseFloat(content);
-            value = (value + base.floatValue()) * multiple.floatValue();
-            if (Float.isInfinite(value)) {
+            BigDecimal multiply = linear(multiple, content, base);
+            if (Float.isInfinite(multiply.floatValue())) {
                 throw new OutRangeException();
             }
-            return ArithmeticUtil.round(value, decimal);
+            return ArithmeticUtil.round(multiply.floatValue(), decimal);
         } catch (Exception e) {
             throw new OutRangeException("Out of float range: |{} ~ {}|, current: {}", Float.MIN_VALUE, Float.MAX_VALUE, content);
         }
@@ -197,12 +180,11 @@ public class ConvertUtil {
      */
     private static double convertDouble(String content, BigDecimal base, BigDecimal multiple, int decimal) {
         try {
-            double value = Double.parseDouble(content);
-            value = (value + base.doubleValue()) * multiple.doubleValue();
-            if (Double.isInfinite(value)) {
+            BigDecimal multiply = linear(multiple, content, base);
+            if (Double.isInfinite(multiply.doubleValue())) {
                 throw new OutRangeException();
             }
-            return ArithmeticUtil.round(value, decimal);
+            return ArithmeticUtil.round(multiply.doubleValue(), decimal);
         } catch (Exception e) {
             throw new OutRangeException("Out of double range: |{} ~ {}|, current: {}", Double.MIN_VALUE, Double.MAX_VALUE, content);
         }
@@ -218,4 +200,16 @@ public class ConvertUtil {
         return Boolean.parseBoolean(content);
     }
 
+    /**
+     * 线性函数：y = ax + b
+     *
+     * @param x A
+     * @param b B
+     * @param a X
+     * @return BigDecimal
+     */
+    private static BigDecimal linear(BigDecimal a, String x, BigDecimal b) {
+        BigDecimal multiply = a.multiply(new BigDecimal(x));
+        return multiply.add(b);
+    }
 }

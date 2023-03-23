@@ -19,7 +19,7 @@ package io.github.pnoker.common.sdk.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.model.*;
-import io.github.pnoker.common.sdk.bean.DriverContext;
+import io.github.pnoker.common.sdk.DriverContext;
 import io.github.pnoker.common.sdk.service.DriverMetadataTempService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

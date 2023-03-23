@@ -16,13 +16,19 @@
 
 package io.github.pnoker.common.sdk.service.rabbit;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
 import io.github.pnoker.common.dto.DeviceCommandDTO;
+import io.github.pnoker.common.sdk.service.DriverCommandService;
+import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 接收设备指令
@@ -34,12 +40,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeviceCommandReceiver {
 
+    @Resource
+    private DriverCommandService driverCommandService;
+
     @RabbitHandler
     @RabbitListener(queues = "#{deviceCommandQueue.name}")
-    public void deviceCommandReceive(Channel channel, Message message, DeviceCommandDTO deviceCommandDTO) {
+    public void deviceCommandReceive(Channel channel, Message message, DeviceCommandDTO entityDTO) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
-            log.info("device command: {}", deviceCommandDTO);
+            log.info("Receive device command: {}", JsonUtil.toPrettyJsonString(entityDTO));
+            if (ObjectUtil.isNull(entityDTO)
+                    || ObjectUtil.isNull(entityDTO.getType())
+                    || CharSequenceUtil.isEmpty(entityDTO.getContent())) {
+                log.error("Invalid device command: {}", entityDTO);
+                return;
+            }
+
+            switch (entityDTO.getType()) {
+                case READ:
+                    driverCommandService.commandRead(entityDTO);
+                    break;
+                case WRITE:
+                    driverCommandService.commandWrite(entityDTO);
+                    break;
+                case CONFIG:
+                    // to do something
+                    break;
+                default:
+                    break;
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

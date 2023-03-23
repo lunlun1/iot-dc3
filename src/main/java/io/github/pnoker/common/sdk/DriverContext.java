@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.common.sdk.bean;
+package io.github.pnoker.common.sdk;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
@@ -45,19 +45,19 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DriverContext {
 
-    /**
-     * 驱动 元数据，当且仅当驱动注册成功之后由 Manager 返回
-     */
-    private DriverMetadata driverMetadata = new DriverMetadata();
+    private String driverId;
+    private String tenant;
+    private String serviceName;
 
     /**
      * 驱动 状态，默认为：注册中
      */
     private DriverStatusEnum driverStatus = DriverStatusEnum.REGISTERING;
 
-    public synchronized void setDriverStatus(DriverStatusEnum driverStatus) {
-        this.driverStatus = driverStatus;
-    }
+    /**
+     * 驱动 元数据，当且仅当驱动注册成功之后由 Manager 返回
+     */
+    private DriverMetadata driverMetadata = new DriverMetadata();
 
     /**
      * 根据 设备Id 获取连接设备的驱动配置信息

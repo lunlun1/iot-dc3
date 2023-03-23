@@ -16,6 +16,7 @@
 
 package io.github.pnoker.common.sdk.service;
 
+import io.github.pnoker.common.dto.DeviceCommandDTO;
 import io.github.pnoker.common.entity.point.PointValue;
 
 /**
@@ -36,13 +37,27 @@ public interface DriverCommandService {
     PointValue read(String deviceId, String pointId);
 
     /**
+     * 读取位号值
+     *
+     * @param entityDTO DeviceCommandDTO
+     */
+    void commandRead(DeviceCommandDTO entityDTO);
+
+    /**
      * 写取位号值
      *
      * @param deviceId 设备ID
      * @param pointId  位号ID
-     * @param value    写入值，写入时会根据位号的类型进行解析
-     * @return 是否写入
+     * @param value    位号值
+     * @return 是否写成功
      */
     Boolean write(String deviceId, String pointId, String value);
+
+    /**
+     * 写取位号值
+     *
+     * @param entityDTO DeviceCommandDTO
+     */
+    void commandWrite(DeviceCommandDTO entityDTO);
 
 }
