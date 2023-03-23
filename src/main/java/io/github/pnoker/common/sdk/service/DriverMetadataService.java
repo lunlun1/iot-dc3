@@ -16,85 +16,55 @@
 
 package io.github.pnoker.common.sdk.service;
 
-import io.github.pnoker.common.model.*;
+import io.github.pnoker.common.dto.DriverMetadataDTO;
 
 /**
+ * 驱动元数据相关接口
+ *
  * @author pnoker
  * @since 2022.1.0
  */
 public interface DriverMetadataService {
 
     /**
-     * 向 DeviceDriver 中添加模板
+     * 驱动元数据
      *
-     * @param profile Profile
+     * @param entityDTO DriverMetadataDTO
      */
-    void upsertProfile(Profile profile);
+    void driverMetadata(DriverMetadataDTO entityDTO);
 
     /**
-     * 删除 DeviceDriver 中模板
+     * 模板元数据
      *
-     * @param id ID
+     * @param entityDTO DriverMetadataDTO
      */
-    void deleteProfile(String id);
+    void profileMetadata(DriverMetadataDTO entityDTO);
 
     /**
-     * 向 DeviceDriver 中添加设备
+     * 设备元数据
      *
-     * @param device Device
+     * @param entityDTO DriverMetadataDTO
      */
-    void upsertDevice(Device device);
+    void deviceMetadata(DriverMetadataDTO entityDTO);
 
     /**
-     * 删除 DeviceDriver 中设备
+     * 位号元数据
      *
-     * @param id ID
+     * @param entityDTO DriverMetadataDTO
      */
-    void deleteDevice(String id);
+    void pointMetadata(DriverMetadataDTO entityDTO);
 
     /**
-     * 向 DeviceDriver 中添加位号
+     * 驱动配置元数据
      *
-     * @param point Point
+     * @param entityDTO DriverMetadataDTO
      */
-    void upsertPoint(Point point);
+    void driverInfoMetadata(DriverMetadataDTO entityDTO);
 
     /**
-     * 删除 DeviceDriver 中位号
+     * 位号配置元数据
      *
-     * @param profileId 模板ID
-     * @param id        ID
+     * @param entityDTO DriverMetadataDTO
      */
-    void deletePoint(String profileId, String id);
-
-    /**
-     * 向 DeviceDriver 中添加驱动配置信息
-     *
-     * @param driverInfo DriverInfo
-     */
-    void upsertDriverInfo(DriverInfo driverInfo);
-
-    /**
-     * 删除 DeviceDriver 中添加驱动配置信息
-     *
-     * @param deviceId    设备ID
-     * @param attributeId Attribute ID
-     */
-    void deleteDriverInfo(String deviceId, String attributeId);
-
-    /**
-     * 向 DeviceDriver 中添加位号配置信息
-     *
-     * @param pointInfo PointInfo
-     */
-    void upsertPointInfo(PointInfo pointInfo);
-
-    /**
-     * 删除 DeviceDriver 中添加位号配置信息
-     *
-     * @param deviceId    设备ID
-     * @param pointId     Point ID
-     * @param attributeId Attribute ID
-     */
-    void deletePointInfo(String deviceId, String pointId, String attributeId);
+    void pointInfoMetadata(DriverMetadataDTO entityDTO);
 }

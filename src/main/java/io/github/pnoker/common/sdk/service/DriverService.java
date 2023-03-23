@@ -16,10 +16,10 @@
 
 package io.github.pnoker.common.sdk.service;
 
+import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
-import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.entity.point.PointValue;
-import io.github.pnoker.common.enums.StatusEnum;
+import io.github.pnoker.common.enums.DriverStatusEnum;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public interface DriverService {
     /**
      * 发送驱动事件
      *
-     * @param driverEvent Driver Event
+     * @param entityDTO DriverEventDTO
      */
-    void driverEventSender(DriverEvent driverEvent);
+    void driverEventSender(DriverEventDTO entityDTO);
 
     /**
      * 发送设备事件
@@ -49,7 +49,7 @@ public interface DriverService {
      * @param deviceId 设备ID
      * @param status   StatusEnum
      */
-    void deviceStatusSender(String deviceId, StatusEnum status);
+    void deviceStatusSender(String deviceId, DriverStatusEnum status);
 
     /**
      * 发送位号值到消息组件

@@ -20,10 +20,10 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
+import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
-import io.github.pnoker.common.entity.DriverEvent;
 import io.github.pnoker.common.entity.point.PointValue;
-import io.github.pnoker.common.enums.StatusEnum;
+import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -53,14 +53,16 @@ public class DriverServiceImpl implements DriverService {
     private ApplicationContext applicationContext;
 
     @Override
-    public void driverEventSender(DriverEvent driverEvent) {
-        if (ObjectUtil.isNotNull(driverEvent)) {
-            rabbitTemplate.convertAndSend(
-                    RabbitConstant.TOPIC_EXCHANGE_EVENT,
-                    RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + serviceName,
-                    driverEvent
-            );
+    public void driverEventSender(DriverEventDTO entityDTO) {
+        if (ObjectUtil.isNull(entityDTO)) {
+            return;
         }
+
+        rabbitTemplate.convertAndSend(
+                RabbitConstant.TOPIC_EXCHANGE_EVENT,
+                RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + serviceName,
+                entityDTO
+        );
     }
 
     @Override
@@ -75,7 +77,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void deviceStatusSender(String deviceId, StatusEnum status) {
+    public void deviceStatusSender(String deviceId, DriverStatusEnum status) {
         deviceEventSender(new DeviceEvent(deviceId, EventConstant.Device.STATUS, status));
     }
 

@@ -16,20 +16,11 @@
 
 package io.github.pnoker.common.sdk.service.rabbit;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
-import io.github.pnoker.common.constant.common.PrefixConstant;
-import io.github.pnoker.common.constant.driver.EventConstant;
-import io.github.pnoker.common.constant.driver.MetadataConstant;
-import io.github.pnoker.common.entity.driver.DriverConfiguration;
-import io.github.pnoker.common.entity.driver.DriverMetadata;
-import io.github.pnoker.common.enums.ResponseEnum;
-import io.github.pnoker.common.model.*;
-import io.github.pnoker.common.sdk.bean.DriverContext;
+import io.github.pnoker.common.dto.DriverMetadataDTO;
 import io.github.pnoker.common.sdk.service.DriverMetadataService;
-import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -40,7 +31,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 接收驱动发送过来的数据
+ * 接收驱动元数据
  *
  * @author pnoker
  * @since 2022.1.0
@@ -50,156 +41,46 @@ import javax.annotation.Resource;
 public class DriverMetadataReceiver {
 
     @Resource
-    private DriverContext driverContext;
-    @Resource
-    private DriverService driverService;
-    @Resource
     private DriverMetadataService driverMetadataService;
 
     @RabbitHandler
     @RabbitListener(queues = "#{driverMetadataQueue.name}")
-    public void driverConfigurationReceive(Channel channel, Message message, DriverConfiguration driverConfiguration) {
+    public void driverMetadataReceive(Channel channel, Message message, DriverMetadataDTO entityDTO) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
-            if (ObjectUtil.isNull(driverConfiguration) || CharSequenceUtil.isEmpty(driverConfiguration.getType()) || CharSequenceUtil.isEmpty(driverConfiguration.getCommand())) {
-                log.error("Invalid driver configuration {}", driverConfiguration);
+            log.debug("Receive driver metadata: {}", JsonUtil.toPrettyJsonString(entityDTO));
+            if (ObjectUtil.isNull(entityDTO)
+                    || ObjectUtil.isNull(entityDTO.getMetadataType())
+                    || ObjectUtil.isNull(entityDTO.getMetadataCommandType())
+                    || CharSequenceUtil.isEmpty(entityDTO.getContent())) {
+                log.error("Invalid driver metadata: {}", entityDTO);
                 return;
             }
 
-            switch (driverConfiguration.getType()) {
-                case PrefixConstant.DRIVER:
-                    configurationDriver(driverConfiguration);
+            switch (entityDTO.getMetadataType()) {
+                case DRIVER:
+                    driverMetadataService.driverMetadata(entityDTO);
                     break;
-                case PrefixConstant.PROFILE:
-                    configurationProfile(driverConfiguration);
+                case PROFILE:
+                    driverMetadataService.profileMetadata(entityDTO);
                     break;
-                case PrefixConstant.DEVICE:
-                    configurationDevice(driverConfiguration);
+                case POINT:
+                    driverMetadataService.pointMetadata(entityDTO);
                     break;
-                case PrefixConstant.POINT:
-                    configurationPoint(driverConfiguration);
+                case DEVICE:
+                    driverMetadataService.deviceMetadata(entityDTO);
                     break;
-                case PrefixConstant.DRIVER_INFO:
-                    configurationDriverInfo(driverConfiguration);
+                case DRIVER_INFO:
+                    driverMetadataService.driverInfoMetadata(entityDTO);
                     break;
-                case PrefixConstant.POINT_INFO:
-                    configurationPointInfo(driverConfiguration);
+                case POINT_INFO:
+                    driverMetadataService.pointInfoMetadata(entityDTO);
                     break;
                 default:
                     break;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 配置 driver
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationDriver(DriverConfiguration driverConfiguration) {
-        if (!EventConstant.Driver.REGISTER_BACK.equals(driverConfiguration.getCommand())) {
-            return;
-        }
-
-        if (ObjectUtil.isNull(driverConfiguration.getContent())) {
-            return;
-        }
-
-        String content = JsonUtil.toPrettyJsonString(driverConfiguration.getContent());
-        if (CharSequenceUtil.isEmpty(content)) {
-            return;
-        }
-        DriverMetadata driverMetadata = JsonUtil.parseObject(content, DriverMetadata.class);
-        if (ObjectUtil.isNull(driverMetadata)) {
-            driverMetadata = new DriverMetadata();
-        }
-        log.info(content);
-        driverContext.setDriverMetadata(driverMetadata);
-        driverMetadata.getDriverAttributeMap().values().forEach(driverAttribute -> log.info("Syncing driver attribute[{}] metadata: {}", driverAttribute.getDisplayName(), JsonUtil.toJsonString(driverAttribute)));
-        driverMetadata.getPointAttributeMap().values().forEach(pointAttribute -> log.info("Syncing point attribute[{}] metadata: {}", pointAttribute.getDisplayName(), JsonUtil.toJsonString(pointAttribute)));
-        driverMetadata.getDeviceMap().values().forEach(device -> log.info("Syncing device[{}] metadata: {}", device.getDeviceName(), JsonUtil.toJsonString(device)));
-        log.info("The metadata synced successfully.");
-    }
-
-    /**
-     * 配置 driver profile
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationProfile(DriverConfiguration driverConfiguration) {
-        Profile profile = Convert.convert(Profile.class, driverConfiguration.getContent());
-        if (MetadataConstant.Profile.ADD.equals(driverConfiguration.getCommand()) || MetadataConstant.Profile.UPDATE.equals(driverConfiguration.getCommand())) {
-            log.info("Upsert profile \n{}", JsonUtil.toJsonString(profile));
-            driverMetadataService.upsertProfile(profile);
-        } else if (MetadataConstant.Profile.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete profile {}", profile.getProfileName());
-            driverMetadataService.deleteProfile(profile.getId());
-        }
-    }
-
-    /**
-     * 配置 driver device
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationDevice(DriverConfiguration driverConfiguration) {
-        Device device = Convert.convert(Device.class, driverConfiguration.getContent());
-        if (MetadataConstant.Device.ADD.equals(driverConfiguration.getCommand()) || MetadataConstant.Device.UPDATE.equals(driverConfiguration.getCommand())) {
-            log.info("Upsert device \n{}", JsonUtil.toJsonString(device));
-            driverMetadataService.upsertDevice(device);
-        } else if (MetadataConstant.Device.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete device {}", device.getDeviceName());
-            driverMetadataService.deleteDevice(device.getId());
-        }
-    }
-
-    /**
-     * 配置 driver point
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationPoint(DriverConfiguration driverConfiguration) {
-        Point point = Convert.convert(Point.class, driverConfiguration.getContent());
-        if (MetadataConstant.Point.ADD.equals(driverConfiguration.getCommand()) || MetadataConstant.Point.UPDATE.equals(driverConfiguration.getCommand())) {
-            log.info("Upsert point \n{}", JsonUtil.toJsonString(point));
-            driverMetadataService.upsertPoint(point);
-        } else if (MetadataConstant.Point.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete point {}", point.getPointName());
-            driverMetadataService.deletePoint(point.getProfileId(), point.getId());
-        }
-    }
-
-    /**
-     * 配置 driver info
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationDriverInfo(DriverConfiguration driverConfiguration) {
-        DriverInfo driverInfo = Convert.convert(DriverInfo.class, driverConfiguration.getContent());
-        if (MetadataConstant.DriverInfo.ADD.equals(driverConfiguration.getCommand()) || MetadataConstant.DriverInfo.UPDATE.equals(driverConfiguration.getCommand())) {
-            log.info("Upsert driver info \n{}", JsonUtil.toJsonString(driverInfo));
-            driverMetadataService.upsertDriverInfo(driverInfo);
-        } else if (MetadataConstant.DriverInfo.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete driver info {}", driverInfo);
-            driverMetadataService.deleteDriverInfo(driverInfo.getDeviceId(), driverInfo.getDriverAttributeId());
-        }
-    }
-
-    /**
-     * 配置 driver point info
-     *
-     * @param driverConfiguration DriverConfiguration
-     */
-    private void configurationPointInfo(DriverConfiguration driverConfiguration) {
-        PointInfo pointInfo = Convert.convert(PointInfo.class, driverConfiguration.getContent());
-        if (MetadataConstant.PointInfo.ADD.equals(driverConfiguration.getCommand()) || MetadataConstant.PointInfo.UPDATE.equals(driverConfiguration.getCommand())) {
-            log.info("Upsert point info \n{}", JsonUtil.toJsonString(pointInfo));
-            driverMetadataService.upsertPointInfo(pointInfo);
-        } else if (MetadataConstant.PointInfo.DELETE.equals(driverConfiguration.getCommand())) {
-            log.info("Delete point info {}", pointInfo);
-            driverMetadataService.deletePointInfo(pointInfo.getPointId(), pointInfo.getId(), pointInfo.getPointAttributeId());
         }
     }
 

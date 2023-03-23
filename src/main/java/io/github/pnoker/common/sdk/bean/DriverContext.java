@@ -19,7 +19,7 @@ package io.github.pnoker.common.sdk.bean;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.entity.driver.AttributeInfo;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
-import io.github.pnoker.common.enums.StatusEnum;
+import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.exception.NotFoundException;
 import io.github.pnoker.common.model.Device;
 import io.github.pnoker.common.model.Point;
@@ -53,9 +53,9 @@ public class DriverContext {
     /**
      * 驱动 状态，默认为：注册中
      */
-    private StatusEnum driverStatus = StatusEnum.REGISTERING;
+    private DriverStatusEnum driverStatus = DriverStatusEnum.REGISTERING;
 
-    public synchronized void setDriverStatus(StatusEnum driverStatus) {
+    public synchronized void setDriverStatus(DriverStatusEnum driverStatus) {
         this.driverStatus = driverStatus;
     }
 

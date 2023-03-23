@@ -18,7 +18,6 @@ package io.github.pnoker.common.sdk.config;
 
 import io.github.pnoker.common.config.TopicConfig;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
-import io.github.pnoker.common.utils.EnvironmentUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -41,13 +40,11 @@ import java.util.Map;
 @Configuration
 @ConditionalOnClass(TopicConfig.class)
 public class DriverTopicConfig {
-    @Value("${spring.env:}")
-    private String env;
     @Value("${spring.application.name}")
     private String serviceName;
 
     @Resource
-    private TopicExchange eventExchange;
+    private TopicExchange commandExchange;
     @Resource
     private TopicExchange metadataExchange;
 
@@ -56,15 +53,47 @@ public class DriverTopicConfig {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_DRIVER_METADATA_PREFIX + this.serviceName, false, false, EnvironmentUtil.isDev(env), arguments);
+        return new Queue(RabbitConstant.QUEUE_DRIVER_METADATA_PREFIX + this.serviceName, false, false, false, arguments);
     }
 
     @Bean
-    Binding metadataBinding(Queue driverMetadataQueue) {
+    Binding driverMetadataBinding(Queue driverMetadataQueue) {
         return BindingBuilder
                 .bind(driverMetadataQueue)
                 .to(metadataExchange)
                 .with(RabbitConstant.ROUTING_DRIVER_METADATA_PREFIX + this.serviceName);
+    }
+
+    @Bean
+    Queue driverCommandQueue() {
+        Map<String, Object> arguments = new HashMap<>();
+        // 30秒：30 * 1000 = 30000L
+        arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
+        return new Queue(RabbitConstant.QUEUE_DRIVER_COMMAND_PREFIX + this.serviceName, false, false, false, arguments);
+    }
+
+    @Bean
+    Binding driverCommandBinding(Queue driverCommandQueue) {
+        return BindingBuilder
+                .bind(driverCommandQueue)
+                .to(commandExchange)
+                .with(RabbitConstant.ROUTING_DRIVER_COMMAND_PREFIX + this.serviceName);
+    }
+
+    @Bean
+    Queue deviceCommandQueue() {
+        Map<String, Object> arguments = new HashMap<>();
+        // 30秒：30 * 1000 = 30000L
+        arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
+        return new Queue(RabbitConstant.QUEUE_DEVICE_COMMAND_PREFIX + this.serviceName, false, false, false, arguments);
+    }
+
+    @Bean
+    Binding deviceCommandBinding(Queue deviceCommandQueue) {
+        return BindingBuilder
+                .bind(deviceCommandQueue)
+                .to(commandExchange)
+                .with(RabbitConstant.ROUTING_DEVICE_COMMAND_PREFIX + this.serviceName);
     }
 
 }
