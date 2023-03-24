@@ -16,9 +16,7 @@
 
 package io.github.pnoker.common.sdk.service.impl;
 
-import io.github.pnoker.common.dto.DriverEventDTO;
-import io.github.pnoker.common.entity.driver.DriverRegister;
-import io.github.pnoker.common.enums.DriverEventTypeEnum;
+import io.github.pnoker.common.dto.DriverRegisterDTO;
 import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.model.Driver;
 import io.github.pnoker.common.sdk.DriverContext;
@@ -26,7 +24,6 @@ import io.github.pnoker.common.sdk.property.DriverProperty;
 import io.github.pnoker.common.sdk.service.DriverRegisterService;
 import io.github.pnoker.common.sdk.service.DriverService;
 import io.github.pnoker.common.utils.HostUtil;
-import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -68,14 +65,13 @@ public class DriverRegisterServiceImpl implements DriverRegisterService {
             driver.setDriverTypeFlag(driverProperty.getType());
             driver.setRemark(driverProperty.getRemark());
 
-            DriverRegister driverRegister = new DriverRegister(
+            DriverRegisterDTO driverRegisterDTO = new DriverRegisterDTO(
                     driverProperty.getTenant(),
                     driver,
                     driverProperty.getDriverAttribute(),
                     driverProperty.getPointAttribute()
             );
-            DriverEventDTO driverEventDTO = new DriverEventDTO(DriverEventTypeEnum.REGISTER, JsonUtil.toJsonString(driverRegister));
-            driverService.driverEventSender(driverEventDTO);
+            driverService.driverRegisterSender(driverRegisterDTO);
         } catch (Exception ignored) {
             driverService.close("The driver initialization failed, registration timed out.");
             Thread.currentThread().interrupt();

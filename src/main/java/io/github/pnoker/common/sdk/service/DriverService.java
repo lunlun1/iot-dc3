@@ -17,6 +17,7 @@
 package io.github.pnoker.common.sdk.service;
 
 import io.github.pnoker.common.dto.DriverEventDTO;
+import io.github.pnoker.common.dto.DriverRegisterDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.DriverStatusEnum;
@@ -28,6 +29,13 @@ import java.util.List;
  * @since 2022.1.0
  */
 public interface DriverService {
+
+    /**
+     * 发送驱动注册
+     *
+     * @param entityDTO DriverRegisterDTO
+     */
+    void driverRegisterSender(DriverRegisterDTO entityDTO);
 
     /**
      * 发送驱动事件

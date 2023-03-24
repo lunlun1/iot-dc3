@@ -21,6 +21,7 @@ import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.common.dto.DriverEventDTO;
+import io.github.pnoker.common.dto.DriverRegisterDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.DriverStatusEnum;
@@ -51,6 +52,19 @@ public class DriverServiceImpl implements DriverService {
     private RabbitTemplate rabbitTemplate;
     @Resource
     private ApplicationContext applicationContext;
+
+    @Override
+    public void driverRegisterSender(DriverRegisterDTO entityDTO) {
+        if (ObjectUtil.isNull(entityDTO)) {
+            return;
+        }
+
+        rabbitTemplate.convertAndSend(
+                RabbitConstant.TOPIC_EXCHANGE_REGISTER,
+                RabbitConstant.ROUTING_DRIVER_REGISTER_PREFIX + serviceName,
+                entityDTO
+        );
+    }
 
     @Override
     public void driverEventSender(DriverEventDTO entityDTO) {
