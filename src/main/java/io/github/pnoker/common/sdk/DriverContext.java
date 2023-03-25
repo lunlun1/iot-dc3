@@ -45,10 +45,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DriverContext {
 
-    private String driverId;
-    private String tenant;
-    private String serviceName;
-
     /**
      * 驱动 状态，默认为：注册中
      */

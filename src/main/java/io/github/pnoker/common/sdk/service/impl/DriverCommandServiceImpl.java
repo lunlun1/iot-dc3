@@ -78,7 +78,9 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             return;
         }
 
+        log.info("Start command of read: {}", JsonUtil.toPrettyJsonString(entityDTO));
         PointValue read = read(deviceRead.getDeviceId(), deviceRead.getPointId());
+        log.info("End command of read: {}", JsonUtil.toPrettyJsonString(read));
     }
 
     @Override
@@ -86,7 +88,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         Device device = driverContext.getDeviceByDeviceId(deviceId);
         try {
             Point point = driverContext.getPointByDeviceIdAndPointId(deviceId, pointId);
-            AttributeTypeFlagEnum typeEnum = AttributeTypeFlagEnum.of(point.getPointTypeFlag().getCode());
+            AttributeTypeFlagEnum typeEnum = AttributeTypeFlagEnum.ofCode(point.getPointTypeFlag().getCode());
             return driverCustomService.write(
                     driverContext.getDriverInfoByDeviceId(deviceId),
                     driverContext.getPointInfoByDeviceIdAndPointId(deviceId, pointId),
@@ -105,7 +107,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             return;
         }
 
+        log.info("Start command of write: {}", JsonUtil.toPrettyJsonString(entityDTO));
         Boolean write = write(deviceWrite.getDeviceId(), deviceWrite.getPointId(), deviceWrite.getValue());
+        if (Boolean.TRUE.equals(write)) {
+            PointValue read = read(deviceWrite.getDeviceId(), deviceWrite.getPointId());
+            log.info("End command of write: {}", JsonUtil.toPrettyJsonString(read));
+        }
+        log.info("End command of write: write {}", write);
     }
 
 }

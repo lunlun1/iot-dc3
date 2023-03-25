@@ -286,7 +286,7 @@ public class DriverUtil {
     public static String getTypeClassName(String type) {
         String className = String.class.getName();
 
-        PointTypeFlagEnum valueType = PointTypeFlagEnum.of(type);
+        PointTypeFlagEnum valueType = PointTypeFlagEnum.ofCode(type);
         if (ObjectUtil.isNull(valueType)) {
             throw new IllegalArgumentException("Unsupported type of " + type);
         }

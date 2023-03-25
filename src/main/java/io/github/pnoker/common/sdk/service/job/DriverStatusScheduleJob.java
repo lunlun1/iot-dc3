@@ -24,7 +24,6 @@ import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +39,6 @@ import javax.annotation.Resource;
 @Component
 public class DriverStatusScheduleJob extends QuartzJobBean {
 
-    @Value("${spring.application.name}")
-    private String serviceName;
     @Resource
     private DriverContext driverContext;
     @Resource
@@ -49,7 +46,7 @@ public class DriverStatusScheduleJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        DriverEventDTO.DriverStatus driverStatus = new DriverEventDTO.DriverStatus(serviceName, driverContext.getDriverStatus());
+        DriverEventDTO.DriverStatus driverStatus = new DriverEventDTO.DriverStatus(driverContext.getDriverMetadata().getDriverId(), driverContext.getDriverStatus());
         DriverEventDTO driverEventDTO = new DriverEventDTO(DriverEventTypeEnum.HEARTBEAT, JsonUtil.toJsonString(driverStatus));
         driverService.driverEventSender(driverEventDTO);
     }

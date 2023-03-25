@@ -56,7 +56,7 @@ public class DriverMetadataReceiver {
             }
 
             switch (entityDTO.getType()) {
-                case DRIVER:
+                case METADATA:
                     driverMetadataService.driverMetadata(entityDTO);
                     break;
                 case PROFILE:
