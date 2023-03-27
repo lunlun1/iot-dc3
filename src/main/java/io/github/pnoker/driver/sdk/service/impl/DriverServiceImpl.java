@@ -25,11 +25,11 @@ import io.github.pnoker.common.dto.DriverRegisterDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.DriverStatusEnum;
-import io.github.pnoker.driver.sdk.service.DriverService;
 import io.github.pnoker.common.utils.JsonUtil;
+import io.github.pnoker.driver.sdk.DriverContext;
+import io.github.pnoker.driver.sdk.service.DriverService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
@@ -45,8 +45,8 @@ import java.util.List;
 @Service
 public class DriverServiceImpl implements DriverService {
 
-    @Value("${spring.application.name}")
-    private String serviceName;
+    @Resource
+    private DriverContext driverContext;
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -61,7 +61,7 @@ public class DriverServiceImpl implements DriverService {
 
         rabbitTemplate.convertAndSend(
                 RabbitConstant.TOPIC_EXCHANGE_REGISTER,
-                RabbitConstant.ROUTING_DRIVER_REGISTER_PREFIX + serviceName,
+                RabbitConstant.ROUTING_DRIVER_REGISTER_PREFIX + driverContext.getDriverMetadata().getDriverId(),
                 entityDTO
         );
     }
@@ -74,7 +74,7 @@ public class DriverServiceImpl implements DriverService {
 
         rabbitTemplate.convertAndSend(
                 RabbitConstant.TOPIC_EXCHANGE_EVENT,
-                RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + serviceName,
+                RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + driverContext.getDriverMetadata().getDriverId(),
                 entityDTO
         );
     }
@@ -84,7 +84,7 @@ public class DriverServiceImpl implements DriverService {
         if (ObjectUtil.isNotNull(deviceEvent)) {
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_EVENT,
-                    RabbitConstant.ROUTING_DEVICE_EVENT_PREFIX + serviceName,
+                    RabbitConstant.ROUTING_DEVICE_EVENT_PREFIX + driverContext.getDriverMetadata().getDriverId(),
                     deviceEvent
             );
         }
@@ -101,7 +101,7 @@ public class DriverServiceImpl implements DriverService {
             log.debug("Send point value: {}", JsonUtil.toJsonString(pointValue));
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_VALUE,
-                    RabbitConstant.ROUTING_POINT_VALUE_PREFIX + serviceName,
+                    RabbitConstant.ROUTING_POINT_VALUE_PREFIX + driverContext.getDriverMetadata().getDriverId(),
                     pointValue
             );
         }
