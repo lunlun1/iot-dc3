@@ -19,13 +19,14 @@ package io.github.pnoker.driver.sdk.utils;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.common.ExceptionConstant;
 import io.github.pnoker.common.enums.PointTypeFlagEnum;
+import io.github.pnoker.common.exception.EmptyException;
 import io.github.pnoker.common.exception.OutRangeException;
-import io.github.pnoker.common.exception.UnSupportException;
 import io.github.pnoker.common.model.Point;
 import io.github.pnoker.common.utils.ArithmeticUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * 类型转换相关工具类集合
@@ -50,14 +51,14 @@ public class ConvertUtil {
      * @return Value
      */
     public static String convertValue(Point point, String rawValue) {
-        PointTypeFlagEnum valueType = point.getPointTypeFlag();
-        if (ObjectUtil.isNull(valueType)) {
-            throw new UnSupportException("Unsupported type of {}", point.getPointTypeFlag());
+        if (ObjectUtil.isNull(point)) {
+            throw new EmptyException("Point is empty");
         }
 
-        BigDecimal base = ObjectUtil.isNotNull(point.getBaseValue()) ? point.getBaseValue() : new BigDecimal(0);
-        BigDecimal multiple = ObjectUtil.isNotNull(point.getMultiple()) ? point.getMultiple() : new BigDecimal(1);
-        int decimal = ObjectUtil.isNotNull(point.getValueDecimal()) ? point.getValueDecimal() : 6;
+        PointTypeFlagEnum valueType = Optional.ofNullable(point.getPointTypeFlag()).orElse(PointTypeFlagEnum.STRING);
+        BigDecimal base = Optional.ofNullable(point.getBaseValue()).orElse(new BigDecimal(0));
+        BigDecimal multiple = Optional.ofNullable(point.getMultiple()).orElse(new BigDecimal(1));
+        byte decimal = Optional.ofNullable(point.getValueDecimal()).orElse((byte) 6);
 
         Object value;
         switch (valueType) {
@@ -83,8 +84,7 @@ public class ConvertUtil {
                 value = convertBoolean(rawValue);
                 break;
             default:
-                value = rawValue;
-                break;
+                return rawValue;
         }
 
         return String.valueOf(value);
@@ -160,7 +160,7 @@ public class ConvertUtil {
      * @param content 字符串
      * @return float
      */
-    private static float convertFloat(String content, BigDecimal base, BigDecimal multiple, int decimal) {
+    private static float convertFloat(String content, BigDecimal base, BigDecimal multiple, byte decimal) {
         try {
             BigDecimal multiply = linear(multiple, content, base);
             if (Float.isInfinite(multiply.floatValue())) {
@@ -178,7 +178,7 @@ public class ConvertUtil {
      * @param content 字符串
      * @return double
      */
-    private static double convertDouble(String content, BigDecimal base, BigDecimal multiple, int decimal) {
+    private static double convertDouble(String content, BigDecimal base, BigDecimal multiple, byte decimal) {
         try {
             BigDecimal multiply = linear(multiple, content, base);
             if (Double.isInfinite(multiply.doubleValue())) {
