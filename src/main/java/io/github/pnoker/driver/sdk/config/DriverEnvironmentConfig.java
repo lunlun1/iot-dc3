@@ -20,6 +20,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.pnoker.common.constant.common.EnvironmentConstant;
 import io.github.pnoker.common.utils.EnvironmentUtil;
+import io.github.pnoker.common.utils.HostUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
@@ -34,14 +35,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Driver Environment Config
+ * Environment Config
  *
  * @author pnoker
  * @since 2022.1.0
  */
 @Slf4j
 @Configuration
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order(Ordered.LOWEST_PRECEDENCE - 100)
 public class DriverEnvironmentConfig implements EnvironmentPostProcessor {
 
     @Override
@@ -53,13 +54,16 @@ public class DriverEnvironmentConfig implements EnvironmentPostProcessor {
 
         String tenant = environment.getProperty(EnvironmentConstant.DRIVER_TENANT, String.class);
         String name = environment.getProperty(EnvironmentConstant.SPRING_APPLICATION_NAME, String.class);
-        if (CharSequenceUtil.isEmpty(name)) {
-            name = StrUtil.format("{}/{}", tenant, name);
-        }
+        String client = StrUtil.format("{}/{}_{}", tenant, name, node);
+        String service = StrUtil.format("{}/{}", tenant, name);
+        String port = environment.getProperty(EnvironmentConstant.SERVER_PORT, String.class);
 
         Map<String, Object> propertySourceMap = new HashMap<>(2);
         propertySourceMap.put(EnvironmentConstant.DRIVER_NODE, node);
-        propertySourceMap.put(EnvironmentConstant.SPRING_APPLICATION_NAME, name);
+        propertySourceMap.put(EnvironmentConstant.DRIVER_SERVICE, service);
+        propertySourceMap.put(EnvironmentConstant.DRIVER_HOST, HostUtil.localHost());
+        propertySourceMap.put(EnvironmentConstant.DRIVER_PORT, port);
+        propertySourceMap.put(EnvironmentConstant.DRIVER_CLIENT, client);
         MutablePropertySources propertySources = environment.getPropertySources();
         propertySources.addFirst(new MapPropertySource("driver", propertySourceMap));
     }

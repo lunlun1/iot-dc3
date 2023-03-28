@@ -19,11 +19,11 @@ package io.github.pnoker.driver.sdk.service.impl;
 import io.github.pnoker.common.dto.DriverRegisterDTO;
 import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.model.Driver;
+import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverRegisterService;
 import io.github.pnoker.driver.sdk.service.DriverService;
-import io.github.pnoker.common.utils.HostUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,19 +54,14 @@ public class DriverRegisterServiceImpl implements DriverRegisterService {
 
     @Override
     public void register() {
-        log.info("The driver {}/{} is initializing", this.serviceName, driverProperty.getName());
+        log.info("The driver {} is initializing", driverProperty.getService());
 
         try {
-            Driver driver = new Driver();
-            driver.setDriverName(driverProperty.getName());
-            driver.setServiceName(this.serviceName);
-            driver.setServiceHost(HostUtil.localHost());
-            driver.setServicePort(this.port);
-            driver.setDriverTypeFlag(driverProperty.getType());
-            driver.setRemark(driverProperty.getRemark());
-
+            Driver driver = buildDriverByProperty();
+            log.info("The driver {} information is: {}", driverProperty.getService(), JsonUtil.toPrettyJsonString(driver));
             DriverRegisterDTO driverRegisterDTO = new DriverRegisterDTO(
                     driverProperty.getTenant(),
+                    driverProperty.getClient(),
                     driver,
                     driverProperty.getDriverAttribute(),
                     driverProperty.getPointAttribute()
@@ -78,6 +73,23 @@ public class DriverRegisterServiceImpl implements DriverRegisterService {
         }
 
         driverContext.setDriverStatus(DriverStatusEnum.ONLINE);
-        log.info("The driver {}/{} is initialized successfully.", this.serviceName, driverProperty.getName());
+        log.info("The driver {} is initialized successfully.", driverProperty.getService());
+    }
+
+    /**
+     * Property To Driver
+     *
+     * @return Driver
+     */
+    private Driver buildDriverByProperty() {
+        Driver driver = new Driver();
+        driver.setDriverName(driverProperty.getName());
+        driver.setDriverCode(driverProperty.getCode());
+        driver.setServiceName(driverProperty.getService());
+        driver.setServiceHost(driverProperty.getHost());
+        driver.setServicePort(driverProperty.getPort());
+        driver.setDriverTypeFlag(driverProperty.getType());
+        driver.setRemark(driverProperty.getRemark());
+        return driver;
     }
 }

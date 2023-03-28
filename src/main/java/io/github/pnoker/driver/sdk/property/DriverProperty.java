@@ -42,6 +42,21 @@ import java.util.List;
 @AllArgsConstructor
 @ConfigurationProperties(prefix = "driver")
 public class DriverProperty {
+
+    /**
+     * 租户
+     */
+    @NotBlank(message = "Tenant can't be empty")
+    @Pattern(regexp = "^[A-Za-z0-9][A-Za-z0-9-_#@/.|]{1,31}$",
+            message = "Invalid driver tenant")
+    private String tenant;
+
+    /**
+     * 驱动类型
+     */
+    @NotNull(message = "Driver type can't be empty")
+    private DriverTypeFlagEnum type = DriverTypeFlagEnum.DRIVER;
+
     /**
      * 驱动名称
      */
@@ -51,18 +66,12 @@ public class DriverProperty {
     private String name;
 
     /**
-     * 驱动类型
+     * 驱动编号
      */
-    @NotNull(message = "Driver type can't be empty")
-    private DriverTypeFlagEnum type = DriverTypeFlagEnum.DRIVER;
-
-    /**
-     * 租户
-     */
-    @NotBlank(message = "Tenant can't be empty")
-    @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5][A-Za-z0-9\\u4e00-\\u9fa5-_#@/.|]{1,31}$",
-            message = "Invalid driver tenant")
-    private String tenant;
+    @NotBlank(message = "Driver name can't be empty")
+    @Pattern(regexp = "^[A-Za-z0-9][A-Za-z0-9-_#@/.|]{1,31}$",
+            message = "Invalid driver code")
+    private String code;
 
     /**
      * 描述
@@ -83,4 +92,30 @@ public class DriverProperty {
      * 位号属性
      */
     private List<PointAttribute> pointAttribute;
+
+    /*以下定义为内部参数*/
+    /**
+     * 驱动节点编号，8位随机数
+     */
+    private String node;
+
+    /**
+     * 驱动服务名称，租户/应用名称
+     */
+    private String service;
+
+    /**
+     * 驱动主机
+     */
+    private String host;
+
+    /**
+     * 驱动端口
+     */
+    private Integer port;
+
+    /**
+     * 驱动客户端，租户/应用名称_驱动节点编号
+     */
+    private String client;
 }

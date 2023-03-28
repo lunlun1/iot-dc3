@@ -6,6 +6,12 @@
       "description": "Driver name."
     },
     {
+      "name": "driver.code",
+      "type": "java.lang.String",
+      "description": "Driver code."
+    },
+    ,
+    {
       "name": "driver.type",
       "type": "io.github.pnoker.common.enums.DriverTypeFlagEnum",
       "description": "Driver type."
@@ -16,24 +22,9 @@
       "description": "Driver tenant."
     },
     {
-      "name": "driver.project",
-      "type": "java.lang.String",
-      "description": "Driver project."
-    },
-    {
       "name": "driver.remark",
       "type": "java.lang.String",
       "description": "Driver remark."
-    },
-    {
-      "name": "driver.driver-attribute",
-      "type": "java.util.List<io.github.pnoker.common.model.DriverAttribute>",
-      "description": "Driver attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
-    },
-    {
-      "name": "driver.point-attribute",
-      "type": "java.util.List<io.github.pnoker.common.model.PointAttribute>",
-      "description": "Device point attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
     },
     {
       "name": "driver.schedule.read.enable",
@@ -59,6 +50,16 @@
       "name": "driver.custom",
       "type": "java.lang.String",
       "description": "Driver custom config."
+    },
+    {
+      "name": "driver.driver-attribute",
+      "type": "java.util.List<io.github.pnoker.common.model.DriverAttribute>",
+      "description": "Driver attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
+    },
+    {
+      "name": "driver.point-attribute",
+      "type": "java.util.List<io.github.pnoker.common.model.PointAttribute>",
+      "description": "Device point attribute list<p/><p>- display-name: attribute display name<p>- attribute-name: attribute name<p>- attribute-type-flag: string/int/double/float/long/boolean<p>- default-value: default value<p>- remark: description."
     }
   ]
 }

@@ -27,6 +27,7 @@ import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
+import io.github.pnoker.driver.sdk.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -46,6 +47,8 @@ import java.util.List;
 public class DriverServiceImpl implements DriverService {
 
     @Resource
+    private DriverProperty driverProperty;
+    @Resource
     private DriverContext driverContext;
 
     @Resource
@@ -61,7 +64,7 @@ public class DriverServiceImpl implements DriverService {
 
         rabbitTemplate.convertAndSend(
                 RabbitConstant.TOPIC_EXCHANGE_REGISTER,
-                RabbitConstant.ROUTING_DRIVER_REGISTER_PREFIX + driverContext.getDriverMetadata().getDriverId(),
+                RabbitConstant.ROUTING_DRIVER_REGISTER_PREFIX + driverProperty.getClient(),
                 entityDTO
         );
     }

@@ -30,46 +30,34 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 接收驱动元数据
+ * 接收驱动同步
  *
  * @author pnoker
  * @since 2022.1.0
  */
 @Slf4j
 @Component
-public class DriverMetadataReceiver {
+public class DriverSyncReceiver {
 
     @Resource
     private DriverMetadataService driverMetadataService;
 
     @RabbitHandler
-    @RabbitListener(queues = "#{driverMetadataQueue.name}")
-    public void driverMetadataReceive(Channel channel, Message message, DriverMetadataDTO entityDTO) {
+    @RabbitListener(queues = "#{driverSyncQueue.name}")
+    public void driverSyncReceive(Channel channel, Message message, DriverMetadataDTO entityDTO) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
-            log.debug("Receive driver metadata: {}", JsonUtil.toPrettyJsonString(entityDTO));
+            log.debug("Receive driver sync: {}", JsonUtil.toPrettyJsonString(entityDTO));
             if (ObjectUtil.isNull(entityDTO)
                     || ObjectUtil.isNull(entityDTO.getType())
                     || ObjectUtil.isNull(entityDTO.getMetadataCommandType())) {
-                log.error("Invalid driver metadata: {}", entityDTO);
+                log.error("Invalid driver sync: {}", entityDTO);
                 return;
             }
 
             switch (entityDTO.getType()) {
-                case PROFILE:
-                    driverMetadataService.profileMetadata(entityDTO);
-                    break;
-                case POINT:
-                    driverMetadataService.pointMetadata(entityDTO);
-                    break;
-                case DEVICE:
-                    driverMetadataService.deviceMetadata(entityDTO);
-                    break;
-                case DRIVER_INFO:
-                    driverMetadataService.driverInfoMetadata(entityDTO);
-                    break;
-                case POINT_INFO:
-                    driverMetadataService.pointInfoMetadata(entityDTO);
+                case METADATA:
+                    driverMetadataService.driverMetadata(entityDTO);
                     break;
                 default:
                     break;

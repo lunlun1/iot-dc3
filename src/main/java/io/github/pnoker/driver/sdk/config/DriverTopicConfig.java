@@ -16,14 +16,12 @@
 
 package io.github.pnoker.driver.sdk.config;
 
-import io.github.pnoker.common.config.TopicConfig;
+import io.github.pnoker.common.config.ExchangeConfig;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.driver.sdk.DriverContext;
+import io.github.pnoker.driver.sdk.property.DriverProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,16 +36,36 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-@ConditionalOnClass(TopicConfig.class)
+@ConditionalOnClass(ExchangeConfig.class)
 public class DriverTopicConfig {
 
+    @Resource
+    private DriverProperty driverProperty;
     @Resource
     private DriverContext driverContext;
 
     @Resource
-    private TopicExchange commandExchange;
+    private DirectExchange syncExchange;
     @Resource
-    private TopicExchange metadataExchange;
+    private FanoutExchange metadataExchange;
+    @Resource
+    private TopicExchange commandExchange;
+
+    @Bean
+    Queue driverSyncQueue() {
+        Map<String, Object> arguments = new HashMap<>();
+        // 30秒：30 * 1000 = 30000L
+        arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
+        return new Queue(RabbitConstant.QUEUE_DRIVER_SYNC_PREFIX + driverProperty.getClient(), false, false, false, arguments);
+    }
+
+    @Bean
+    Binding driverSyncBinding(Queue driverSyncQueue) {
+        return BindingBuilder
+                .bind(driverSyncQueue)
+                .to(syncExchange)
+                .with(RabbitConstant.ROUTING_DRIVER_SYNC_PREFIX + driverProperty.getClient());
+    }
 
     @Bean
     Queue driverMetadataQueue() {
@@ -61,8 +79,7 @@ public class DriverTopicConfig {
     Binding driverMetadataBinding(Queue driverMetadataQueue) {
         return BindingBuilder
                 .bind(driverMetadataQueue)
-                .to(metadataExchange)
-                .with(RabbitConstant.ROUTING_DRIVER_METADATA_PREFIX + driverContext.getDriverMetadata().getDriverId());
+                .to(metadataExchange);
     }
 
     @Bean
