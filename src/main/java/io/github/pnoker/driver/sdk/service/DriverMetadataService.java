@@ -27,13 +27,6 @@ import io.github.pnoker.common.dto.DriverMetadataDTO;
 public interface DriverMetadataService {
 
     /**
-     * 驱动元数据
-     *
-     * @param entityDTO DriverMetadataDTO
-     */
-    void driverMetadata(DriverMetadataDTO entityDTO);
-
-    /**
      * 模板元数据
      *
      * @param entityDTO DriverMetadataDTO

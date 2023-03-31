@@ -30,7 +30,7 @@ import io.github.pnoker.common.model.Point;
 import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.service.DriverCommandService;
 import io.github.pnoker.driver.sdk.service.DriverCustomService;
-import io.github.pnoker.driver.sdk.service.DriverService;
+import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import io.github.pnoker.driver.sdk.utils.ConvertUtil;
 import io.github.pnoker.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     @Resource
     private DriverContext driverContext;
     @Resource
-    private DriverService driverService;
+    private DriverSenderService driverSenderService;
     @Resource
     private DriverCustomService driverCustomService;
 
@@ -74,7 +74,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             }
 
             PointValue pointValue = new PointValue(deviceId, pointId, rawValue, ConvertUtil.convertValue(point, rawValue));
-            driverService.pointValueSender(pointValue);
+            driverSenderService.pointValueSender(pointValue);
             return pointValue;
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);

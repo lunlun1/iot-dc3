@@ -28,7 +28,7 @@ import java.util.List;
  * @author pnoker
  * @since 2022.1.0
  */
-public interface DriverService {
+public interface DriverSenderService {
 
     /**
      * 发送驱动注册
@@ -72,13 +72,5 @@ public interface DriverService {
      * @param pointValues PointValue Array
      */
     void pointValueSender(List<PointValue> pointValues);
-
-    /**
-     * Close ApplicationContext
-     *
-     * @param template Template
-     * @param params   Object Params
-     */
-    void close(CharSequence template, Object... params);
 
 }
