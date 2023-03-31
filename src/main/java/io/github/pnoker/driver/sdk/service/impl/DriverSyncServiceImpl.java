@@ -127,7 +127,6 @@ public class DriverSyncServiceImpl implements DriverSyncService {
         driver.setDriverCode(driverProperty.getCode());
         driver.setServiceName(driverProperty.getService());
         driver.setServiceHost(driverProperty.getHost());
-        driver.setServicePort(driverProperty.getPort());
         driver.setDriverTypeFlag(driverProperty.getType());
         driver.setRemark(driverProperty.getRemark());
         return driver;
