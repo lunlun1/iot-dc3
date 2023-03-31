@@ -70,9 +70,9 @@ public interface DriverMetadataTempService {
     /**
      * 向 DeviceDriver 中添加驱动配置信息
      *
-     * @param driverInfo DriverInfo
+     * @param driverAttributeConfig DriverInfo
      */
-    void upsertDriverInfo(DriverInfo driverInfo);
+    void upsertDriverInfo(DriverAttributeConfig driverAttributeConfig);
 
     /**
      * 删除 DeviceDriver 中添加驱动配置信息
@@ -85,9 +85,9 @@ public interface DriverMetadataTempService {
     /**
      * 向 DeviceDriver 中添加位号配置信息
      *
-     * @param pointInfo PointInfo
+     * @param pointAttributeConfig PointInfo
      */
-    void upsertPointInfo(PointInfo pointInfo);
+    void upsertPointInfo(PointAttributeConfig pointAttributeConfig);
 
     /**
      * 删除 DeviceDriver 中添加位号配置信息

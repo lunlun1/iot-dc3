@@ -78,25 +78,25 @@ public class DriverMetadataServiceImpl implements DriverMetadataService {
 
     @Override
     public void driverInfoMetadata(DriverMetadataDTO entityDTO) {
-        DriverInfo driverInfo = JsonUtil.parseObject(entityDTO.getContent(), DriverInfo.class);
+        DriverAttributeConfig driverAttributeConfig = JsonUtil.parseObject(entityDTO.getContent(), DriverAttributeConfig.class);
         if (MetadataCommandTypeEnum.ADD.equals(entityDTO.getMetadataCommandType()) || MetadataCommandTypeEnum.UPDATE.equals(entityDTO.getMetadataCommandType())) {
-            log.info("Upsert driver info: {}", JsonUtil.toJsonString(driverInfo));
-            driverMetadataTempService.upsertDriverInfo(driverInfo);
+            log.info("Upsert driver attribute config: {}", JsonUtil.toJsonString(driverAttributeConfig));
+            driverMetadataTempService.upsertDriverInfo(driverAttributeConfig);
         } else if (MetadataCommandTypeEnum.DELETE.equals(entityDTO.getMetadataCommandType())) {
-            log.info("Delete driver info: {}", JsonUtil.toJsonString(driverInfo));
-            driverMetadataTempService.deleteDriverInfo(driverInfo.getDeviceId(), driverInfo.getDriverAttributeId());
+            log.info("Delete driver attribute config: {}", JsonUtil.toJsonString(driverAttributeConfig));
+            driverMetadataTempService.deleteDriverInfo(driverAttributeConfig.getDeviceId(), driverAttributeConfig.getDriverAttributeId());
         }
     }
 
     @Override
     public void pointInfoMetadata(DriverMetadataDTO entityDTO) {
-        PointInfo pointInfo = JsonUtil.parseObject(entityDTO.getContent(), PointInfo.class);
+        PointAttributeConfig pointAttributeConfig = JsonUtil.parseObject(entityDTO.getContent(), PointAttributeConfig.class);
         if (MetadataCommandTypeEnum.ADD.equals(entityDTO.getMetadataCommandType()) || MetadataCommandTypeEnum.UPDATE.equals(entityDTO.getMetadataCommandType())) {
-            log.info("Upsert point info: {}", JsonUtil.toJsonString(pointInfo));
-            driverMetadataTempService.upsertPointInfo(pointInfo);
+            log.info("Upsert point attribute config: {}", JsonUtil.toJsonString(pointAttributeConfig));
+            driverMetadataTempService.upsertPointInfo(pointAttributeConfig);
         } else if (MetadataCommandTypeEnum.DELETE.equals(entityDTO.getMetadataCommandType())) {
-            log.info("Delete point info: {}", JsonUtil.toJsonString(pointInfo));
-            driverMetadataTempService.deletePointInfo(pointInfo.getPointId(), pointInfo.getId(), pointInfo.getPointAttributeId());
+            log.info("Delete point attribute config: {}", JsonUtil.toJsonString(pointAttributeConfig));
+            driverMetadataTempService.deletePointInfo(pointAttributeConfig.getPointId(), pointAttributeConfig.getId(), pointAttributeConfig.getPointAttributeId());
         }
     }
 }
