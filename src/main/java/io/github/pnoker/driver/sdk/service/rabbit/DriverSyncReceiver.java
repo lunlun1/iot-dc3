@@ -18,9 +18,9 @@ package io.github.pnoker.driver.sdk.service.rabbit;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
-import io.github.pnoker.common.dto.DriverMetadataDTO;
+import io.github.pnoker.common.dto.DriverSyncDTO;
 import io.github.pnoker.common.utils.JsonUtil;
-import io.github.pnoker.driver.sdk.service.DriverMetadataService;
+import io.github.pnoker.driver.sdk.service.DriverSyncService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -40,28 +40,20 @@ import javax.annotation.Resource;
 public class DriverSyncReceiver {
 
     @Resource
-    private DriverMetadataService driverMetadataService;
+    private DriverSyncService driverSyncService;
 
     @RabbitHandler
     @RabbitListener(queues = "#{driverSyncQueue.name}")
-    public void driverSyncReceive(Channel channel, Message message, DriverMetadataDTO entityDTO) {
+    public void driverSyncReceive(Channel channel, Message message, DriverSyncDTO entityDTO) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
             log.debug("Receive driver sync: {}", JsonUtil.toPrettyJsonString(entityDTO));
-            if (ObjectUtil.isNull(entityDTO)
-                    || ObjectUtil.isNull(entityDTO.getType())
-                    || ObjectUtil.isNull(entityDTO.getMetadataCommandType())) {
+            if (ObjectUtil.isNull(entityDTO)) {
                 log.error("Invalid driver sync: {}", entityDTO);
                 return;
             }
 
-            switch (entityDTO.getType()) {
-                case METADATA:
-                    driverMetadataService.driverMetadata(entityDTO);
-                    break;
-                default:
-                    break;
-            }
+            driverSyncService.down(entityDTO);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

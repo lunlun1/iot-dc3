@@ -58,14 +58,14 @@ public class DriverEnvironmentConfig implements EnvironmentPostProcessor {
         String service = StrUtil.format("{}/{}", tenant, name);
         String port = environment.getProperty(EnvironmentConstant.SERVER_PORT, String.class);
 
-        Map<String, Object> propertySourceMap = new HashMap<>(2);
-        propertySourceMap.put(EnvironmentConstant.DRIVER_NODE, node);
-        propertySourceMap.put(EnvironmentConstant.DRIVER_SERVICE, service);
-        propertySourceMap.put(EnvironmentConstant.DRIVER_HOST, HostUtil.localHost());
-        propertySourceMap.put(EnvironmentConstant.DRIVER_PORT, port);
-        propertySourceMap.put(EnvironmentConstant.DRIVER_CLIENT, client);
+        Map<String, Object> source = new HashMap<>(2);
+        source.put(EnvironmentConstant.DRIVER_NODE, node);
+        source.put(EnvironmentConstant.DRIVER_SERVICE, service);
+        source.put(EnvironmentConstant.DRIVER_HOST, HostUtil.localHost());
+        source.put(EnvironmentConstant.DRIVER_PORT, port);
+        source.put(EnvironmentConstant.DRIVER_CLIENT, client);
         MutablePropertySources propertySources = environment.getPropertySources();
-        propertySources.addFirst(new MapPropertySource("driver", propertySourceMap));
+        propertySources.addFirst(new MapPropertySource("driver", source));
     }
 
 }

@@ -16,7 +16,6 @@
 
 package io.github.pnoker.driver.sdk.service.impl;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
@@ -28,11 +27,9 @@ import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.property.DriverProperty;
-import io.github.pnoker.driver.sdk.service.DriverService;
+import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,7 +41,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class DriverServiceImpl implements DriverService {
+public class DriverSenderServiceImpl implements DriverSenderService {
 
     @Resource
     private DriverProperty driverProperty;
@@ -53,8 +50,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Resource
     private RabbitTemplate rabbitTemplate;
-    @Resource
-    private ApplicationContext applicationContext;
 
     @Override
     public void driverRegisterSender(DriverRegisterDTO entityDTO) {
@@ -115,13 +110,6 @@ public class DriverServiceImpl implements DriverService {
         if (ObjectUtil.isNotNull(pointValues)) {
             pointValues.forEach(this::pointValueSender);
         }
-    }
-
-    @Override
-    public void close(CharSequence template, Object... params) {
-        log.error(CharSequenceUtil.format(template, params));
-        ((ConfigurableApplicationContext) applicationContext).close();
-        System.exit(1);
     }
 
 }

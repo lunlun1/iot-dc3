@@ -20,7 +20,7 @@ import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.enums.DriverEventTypeEnum;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
-import io.github.pnoker.driver.sdk.service.DriverService;
+import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -42,12 +42,12 @@ public class DriverStatusScheduleJob extends QuartzJobBean {
     @Resource
     private DriverContext driverContext;
     @Resource
-    private DriverService driverService;
+    private DriverSenderService driverSenderService;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         DriverEventDTO.DriverStatus driverStatus = new DriverEventDTO.DriverStatus(driverContext.getDriverMetadata().getDriverId(), driverContext.getDriverStatus());
         DriverEventDTO driverEventDTO = new DriverEventDTO(DriverEventTypeEnum.HEARTBEAT, JsonUtil.toJsonString(driverStatus));
-        driverService.driverEventSender(driverEventDTO);
+        driverSenderService.driverEventSender(driverEventDTO);
     }
 }
