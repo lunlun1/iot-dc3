@@ -112,7 +112,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public void pointValueSender(List<PointValue> pointValues) {
-        // TODO 需要添加新的队列支持list数据发送
         if (ObjectUtil.isNotNull(pointValues)) {
             pointValues.forEach(this::pointValueSender);
         }

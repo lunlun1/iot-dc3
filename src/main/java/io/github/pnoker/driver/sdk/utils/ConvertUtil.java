@@ -41,6 +41,9 @@ public class ConvertUtil {
         throw new IllegalStateException(ExceptionConstant.UTILITY_CLASS);
     }
 
+    private static final BigDecimal defaultBase = new BigDecimal(0);
+    private static final BigDecimal defaultMultiple = new BigDecimal(1);
+
     /**
      * 位号数据处理
      * 当出现精度问题，向上调整
@@ -56,8 +59,8 @@ public class ConvertUtil {
         }
 
         PointTypeFlagEnum valueType = Optional.ofNullable(point.getPointTypeFlag()).orElse(PointTypeFlagEnum.STRING);
-        BigDecimal base = Optional.ofNullable(point.getBaseValue()).orElse(new BigDecimal(0));
-        BigDecimal multiple = Optional.ofNullable(point.getMultiple()).orElse(new BigDecimal(1));
+        BigDecimal base = Optional.ofNullable(point.getBaseValue()).orElse(defaultBase);
+        BigDecimal multiple = Optional.ofNullable(point.getMultiple()).orElse(defaultMultiple);
         byte decimal = Optional.ofNullable(point.getValueDecimal()).orElse((byte) 6);
 
         Object value;
@@ -209,7 +212,17 @@ public class ConvertUtil {
      * @return BigDecimal
      */
     private static BigDecimal linear(BigDecimal a, String x, BigDecimal b) {
-        BigDecimal multiply = a.multiply(new BigDecimal(x));
+        BigDecimal bigDecimal = new BigDecimal(x);
+        if (defaultMultiple.compareTo(a) == 0 && defaultBase.compareTo(b) == 0) {
+            return bigDecimal;
+        }
+        if (defaultMultiple.compareTo(a) != 0 && defaultBase.compareTo(b) == 0) {
+            return bigDecimal.multiply(a);
+        }
+        if (defaultMultiple.compareTo(a) == 0 && defaultBase.compareTo(b) != 0) {
+            return bigDecimal.add(b);
+        }
+        BigDecimal multiply = a.multiply(bigDecimal);
         return multiply.add(b);
     }
 }
