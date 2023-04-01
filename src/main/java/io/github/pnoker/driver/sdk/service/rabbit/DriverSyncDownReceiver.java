@@ -18,7 +18,7 @@ package io.github.pnoker.driver.sdk.service.rabbit;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.rabbitmq.client.Channel;
-import io.github.pnoker.common.dto.DriverSyncDTO;
+import io.github.pnoker.common.dto.DriverSyncDownDTO;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.service.DriverSyncService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,19 +37,19 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class DriverSyncReceiver {
+public class DriverSyncDownReceiver {
 
     @Resource
     private DriverSyncService driverSyncService;
 
     @RabbitHandler
-    @RabbitListener(queues = "#{driverSyncQueue.name}")
-    public void driverSyncReceive(Channel channel, Message message, DriverSyncDTO entityDTO) {
+    @RabbitListener(queues = "#{syncDownQueue.name}")
+    public void driverSyncDownReceive(Channel channel, Message message, DriverSyncDownDTO entityDTO) {
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
-            log.debug("Receive driver sync: {}", JsonUtil.toPrettyJsonString(entityDTO));
+            log.debug("Receive driver sync down: {}", JsonUtil.toPrettyJsonString(entityDTO));
             if (ObjectUtil.isNull(entityDTO)) {
-                log.error("Invalid driver sync: {}", entityDTO);
+                log.error("Invalid driver sync down: {}", entityDTO);
                 return;
             }
 

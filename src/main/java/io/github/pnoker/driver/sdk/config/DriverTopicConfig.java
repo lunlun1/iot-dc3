@@ -45,26 +45,26 @@ public class DriverTopicConfig {
     private DriverContext driverContext;
 
     @Resource
-    private DirectExchange syncExchange;
+    private TopicExchange syncExchange;
     @Resource
     private FanoutExchange metadataExchange;
     @Resource
     private TopicExchange commandExchange;
 
     @Bean
-    Queue driverSyncQueue() {
+    Queue syncDownQueue() {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_DRIVER_SYNC_PREFIX + driverProperty.getClient(), false, false, true, arguments);
+        return new Queue(RabbitConstant.QUEUE_SYNC_DOWN, false, false, false, arguments);
     }
 
     @Bean
-    Binding driverSyncBinding(Queue driverSyncQueue) {
+    Binding driverSyncBinding(Queue syncDownQueue) {
         return BindingBuilder
-                .bind(driverSyncQueue)
+                .bind(syncDownQueue)
                 .to(syncExchange)
-                .with(RabbitConstant.ROUTING_DRIVER_SYNC_PREFIX + driverProperty.getClient());
+                .with(RabbitConstant.ROUTING_SYNC_DOWN_PREFIX + driverProperty.getClient());
     }
 
     @Bean

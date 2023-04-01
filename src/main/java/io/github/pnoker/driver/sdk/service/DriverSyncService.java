@@ -16,7 +16,7 @@
 
 package io.github.pnoker.driver.sdk.service;
 
-import io.github.pnoker.common.dto.DriverSyncDTO;
+import io.github.pnoker.common.dto.DriverSyncDownDTO;
 
 /**
  * 驱动注册相关接口
@@ -36,5 +36,5 @@ public interface DriverSyncService {
      *
      * @param entityDTO DriverSyncDTO
      */
-    void down(DriverSyncDTO entityDTO);
+    void down(DriverSyncDownDTO entityDTO);
 }
