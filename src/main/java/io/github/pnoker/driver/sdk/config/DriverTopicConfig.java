@@ -21,10 +21,14 @@ import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.property.DriverProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -47,7 +51,7 @@ public class DriverTopicConfig {
     @Resource
     private TopicExchange syncExchange;
     @Resource
-    private FanoutExchange metadataExchange;
+    private TopicExchange metadataExchange;
     @Resource
     private TopicExchange commandExchange;
 
@@ -56,15 +60,17 @@ public class DriverTopicConfig {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_SYNC_DOWN, false, false, false, arguments);
+        return new Queue(RabbitConstant.QUEUE_SYNC_DOWN_PREFIX + driverProperty.getClient(), false, false, true, arguments);
     }
 
     @Bean
     Binding driverSyncBinding(Queue syncDownQueue) {
-        return BindingBuilder
+        Binding binding = BindingBuilder
                 .bind(syncDownQueue)
                 .to(syncExchange)
                 .with(RabbitConstant.ROUTING_SYNC_DOWN_PREFIX + driverProperty.getClient());
+        binding.addArgument(RabbitConstant.AUTO_DELETE, true);
+        return binding;
     }
 
     @Bean
@@ -72,30 +78,37 @@ public class DriverTopicConfig {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_DRIVER_METADATA_PREFIX + driverContext.getDriverMetadata().getDriverId(), false, false, false, arguments);
+        return new Queue(RabbitConstant.QUEUE_DRIVER_METADATA_PREFIX + driverProperty.getClient(), false, false, true, arguments);
     }
 
     @Bean
     Binding driverMetadataBinding(Queue driverMetadataQueue) {
-        return BindingBuilder
+        Binding binding = BindingBuilder
                 .bind(driverMetadataQueue)
-                .to(metadataExchange);
+                .to(metadataExchange)
+                .with(RabbitConstant.ROUTING_DRIVER_METADATA_PREFIX + driverProperty.getService());
+        binding.addArgument(RabbitConstant.AUTO_DELETE, true);
+        return binding;
     }
 
     @Bean
+    @Lazy
     Queue driverCommandQueue() {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_DRIVER_COMMAND_PREFIX + driverContext.getDriverMetadata().getDriverId(), false, false, false, arguments);
+        return new Queue(RabbitConstant.QUEUE_DRIVER_COMMAND_PREFIX + driverProperty.getService(), false, false, true, arguments);
     }
 
     @Bean
+    @Lazy
     Binding driverCommandBinding(Queue driverCommandQueue) {
-        return BindingBuilder
+        Binding binding = BindingBuilder
                 .bind(driverCommandQueue)
                 .to(commandExchange)
-                .with(RabbitConstant.ROUTING_DRIVER_COMMAND_PREFIX + driverContext.getDriverMetadata().getDriverId());
+                .with(RabbitConstant.ROUTING_DRIVER_COMMAND_PREFIX + driverProperty.getService());
+        binding.addArgument(RabbitConstant.AUTO_DELETE, true);
+        return binding;
     }
 
     @Bean
@@ -103,15 +116,17 @@ public class DriverTopicConfig {
         Map<String, Object> arguments = new HashMap<>();
         // 30秒：30 * 1000 = 30000L
         arguments.put(RabbitConstant.MESSAGE_TTL, 30000L);
-        return new Queue(RabbitConstant.QUEUE_DEVICE_COMMAND_PREFIX + driverContext.getDriverMetadata().getDriverId(), false, false, false, arguments);
+        return new Queue(RabbitConstant.QUEUE_DEVICE_COMMAND_PREFIX + driverProperty.getService(), false, false, true, arguments);
     }
 
     @Bean
     Binding deviceCommandBinding(Queue deviceCommandQueue) {
-        return BindingBuilder
+        Binding binding = BindingBuilder
                 .bind(deviceCommandQueue)
                 .to(commandExchange)
-                .with(RabbitConstant.ROUTING_DEVICE_COMMAND_PREFIX + driverContext.getDriverMetadata().getDriverId());
+                .with(RabbitConstant.ROUTING_DEVICE_COMMAND_PREFIX + driverProperty.getService());
+        binding.addArgument(RabbitConstant.AUTO_DELETE, true);
+        return binding;
     }
 
 }

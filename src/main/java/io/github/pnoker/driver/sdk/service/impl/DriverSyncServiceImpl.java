@@ -39,7 +39,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 驱动注册接口实现
+ * 驱动同步相关接口实现
  *
  * @author pnoker
  * @since 2022.1.0

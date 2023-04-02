@@ -19,7 +19,7 @@ package io.github.pnoker.driver.sdk.service;
 import io.github.pnoker.common.dto.DriverSyncDownDTO;
 
 /**
- * 驱动注册相关接口
+ * 驱动同步相关接口
  *
  * @author pnoker
  * @since 2022.1.0

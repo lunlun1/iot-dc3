@@ -20,12 +20,10 @@ import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.EventConstant;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.common.dto.DriverEventDTO;
-import io.github.pnoker.common.dto.DriverSyncUpDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
 import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.utils.JsonUtil;
-import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,7 @@ import java.util.List;
 public class DriverSenderServiceImpl implements DriverSenderService {
 
     @Resource
-    private DriverContext driverContext;
+    private DriverProperty driverProperty;
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -57,7 +55,7 @@ public class DriverSenderServiceImpl implements DriverSenderService {
 
         rabbitTemplate.convertAndSend(
                 RabbitConstant.TOPIC_EXCHANGE_EVENT,
-                RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + driverContext.getDriverMetadata().getDriverId(),
+                RabbitConstant.ROUTING_DRIVER_EVENT_PREFIX + driverProperty.getService(),
                 entityDTO
         );
     }
@@ -67,7 +65,7 @@ public class DriverSenderServiceImpl implements DriverSenderService {
         if (ObjectUtil.isNotNull(deviceEvent)) {
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_EVENT,
-                    RabbitConstant.ROUTING_DEVICE_EVENT_PREFIX + driverContext.getDriverMetadata().getDriverId(),
+                    RabbitConstant.ROUTING_DEVICE_EVENT_PREFIX + driverProperty.getService(),
                     deviceEvent
             );
         }
@@ -84,7 +82,7 @@ public class DriverSenderServiceImpl implements DriverSenderService {
             log.debug("Send point value: {}", JsonUtil.toJsonString(pointValue));
             rabbitTemplate.convertAndSend(
                     RabbitConstant.TOPIC_EXCHANGE_VALUE,
-                    RabbitConstant.ROUTING_POINT_VALUE_PREFIX + driverContext.getDriverMetadata().getDriverId(),
+                    RabbitConstant.ROUTING_POINT_VALUE_PREFIX + driverProperty.getService(),
                     pointValue
             );
         }
