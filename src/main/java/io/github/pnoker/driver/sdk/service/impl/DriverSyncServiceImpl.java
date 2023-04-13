@@ -24,7 +24,7 @@ import io.github.pnoker.common.dto.DriverSyncDownDTO;
 import io.github.pnoker.common.dto.DriverSyncUpDTO;
 import io.github.pnoker.common.entity.driver.DriverMetadata;
 import io.github.pnoker.common.enums.DriverStatusEnum;
-import io.github.pnoker.common.model.Driver;
+import io.github.pnoker.common.model.DriverDO;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
 import io.github.pnoker.driver.sdk.property.DriverProperty;
@@ -115,7 +115,7 @@ public class DriverSyncServiceImpl implements DriverSyncService {
      */
     private DriverSyncUpDTO buildRegisterDTOByProperty() {
         DriverSyncUpDTO driverSyncUpDTO = new DriverSyncUpDTO();
-        driverSyncUpDTO.setDriver(buildDriverByProperty());
+        driverSyncUpDTO.setDriverDO(buildDriverByProperty());
         driverSyncUpDTO.setTenant(driverProperty.getTenant());
         driverSyncUpDTO.setClient(driverProperty.getClient());
         driverSyncUpDTO.setDriverAttributes(driverProperty.getDriverAttribute());
@@ -128,15 +128,15 @@ public class DriverSyncServiceImpl implements DriverSyncService {
      *
      * @return Driver
      */
-    private Driver buildDriverByProperty() {
-        Driver driver = new Driver();
-        driver.setDriverName(driverProperty.getName());
-        driver.setDriverCode(driverProperty.getCode());
-        driver.setServiceName(driverProperty.getService());
-        driver.setServiceHost(driverProperty.getHost());
-        driver.setDriverTypeFlag(driverProperty.getType());
-        driver.setRemark(driverProperty.getRemark());
-        return driver;
+    private DriverDO buildDriverByProperty() {
+        DriverDO entityDO = new DriverDO();
+        entityDO.setDriverName(driverProperty.getName());
+        entityDO.setDriverCode(driverProperty.getCode());
+        entityDO.setServiceName(driverProperty.getService());
+        entityDO.setServiceHost(driverProperty.getHost());
+        entityDO.setDriverTypeFlag(driverProperty.getType());
+        entityDO.setRemark(driverProperty.getRemark());
+        return entityDO;
     }
 
 }
