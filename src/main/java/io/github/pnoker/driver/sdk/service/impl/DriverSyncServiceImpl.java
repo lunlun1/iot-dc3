@@ -115,7 +115,7 @@ public class DriverSyncServiceImpl implements DriverSyncService {
      */
     private DriverSyncUpDTO buildRegisterDTOByProperty() {
         DriverSyncUpDTO driverSyncUpDTO = new DriverSyncUpDTO();
-        driverSyncUpDTO.setDriverDO(buildDriverByProperty());
+        driverSyncUpDTO.setDriver(buildDriverByProperty());
         driverSyncUpDTO.setTenant(driverProperty.getTenant());
         driverSyncUpDTO.setClient(driverProperty.getClient());
         driverSyncUpDTO.setDriverAttributes(driverProperty.getDriverAttribute());
