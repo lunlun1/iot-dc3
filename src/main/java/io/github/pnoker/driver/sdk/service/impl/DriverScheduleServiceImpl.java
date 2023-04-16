@@ -18,8 +18,8 @@ package io.github.pnoker.driver.sdk.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.github.pnoker.common.constant.driver.ScheduleConstant;
-import io.github.pnoker.driver.sdk.property.DriverProperty;
-import io.github.pnoker.driver.sdk.property.ScheduleProperty;
+import io.github.pnoker.driver.sdk.entity.property.DriverProperty;
+import io.github.pnoker.driver.sdk.entity.property.ScheduleProperty;
 import io.github.pnoker.driver.sdk.service.DriverScheduleService;
 import io.github.pnoker.driver.sdk.service.job.DriverCustomScheduleJob;
 import io.github.pnoker.driver.sdk.service.job.DriverReadScheduleJob;

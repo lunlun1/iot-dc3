@@ -27,7 +27,7 @@ import io.github.pnoker.common.enums.DriverStatusEnum;
 import io.github.pnoker.common.model.DriverDO;
 import io.github.pnoker.common.utils.JsonUtil;
 import io.github.pnoker.driver.sdk.DriverContext;
-import io.github.pnoker.driver.sdk.property.DriverProperty;
+import io.github.pnoker.driver.sdk.entity.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import io.github.pnoker.driver.sdk.service.DriverSyncService;
 import lombok.extern.slf4j.Slf4j;

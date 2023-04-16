@@ -16,7 +16,7 @@
 
 package io.github.pnoker.driver.sdk.init;
 
-import io.github.pnoker.driver.sdk.property.DriverProperty;
+import io.github.pnoker.driver.sdk.entity.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverCustomService;
 import io.github.pnoker.driver.sdk.service.DriverScheduleService;
 import io.github.pnoker.driver.sdk.service.DriverSyncService;

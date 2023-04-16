@@ -48,6 +48,7 @@ public class DriverStatusScheduleJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         DriverEventDTO.DriverStatus driverStatus = new DriverEventDTO.DriverStatus(driverContext.getDriverMetadata().getDriverId(), driverContext.getDriverStatus());
         DriverEventDTO driverEventDTO = new DriverEventDTO(DriverEventTypeEnum.HEARTBEAT, JsonUtil.toJsonString(driverStatus));
+        log.debug("Send driver event: {}", JsonUtil.toJsonString(driverEventDTO));
         driverSenderService.driverEventSender(driverEventDTO);
     }
 }

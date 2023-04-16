@@ -23,31 +23,24 @@ import io.github.pnoker.common.model.Point;
 import java.util.Map;
 
 /**
- * 自定义驱动接口，开发的自定义驱动需要实现 read 和 write 接口，可以参考以提供的驱动模块写法
- *
- * <ol>
- * <li>{@link DriverCustomService#initial} 初始化操作，需要根据不同的驱动实现该功能</li>
- * <li>{@link DriverCustomService#schedule} 调度操作，需要根据不同的驱动实现该功能</li>
- * <li>{@link DriverCustomService#read} 读操作，需要根据不同的驱动实现该功能</li>
- * <li>{@link DriverCustomService#write} 写操作，需要根据不同的驱动实现该功能</li>
- * </ol>
+ * 自定义驱动接口，开发的自定义驱动至少需要实现 read 和 write 接口，可以参考以提供的驱动模块写法
  *
  * @author pnoker
  * @since 2022.1.0
  */
 public interface DriverCustomService {
     /**
-     * Initial Driver
+     * 初始化接口，会在驱动启动时执行
      */
     void initial();
 
     /**
-     * Schedule Operation
+     * 自定义调度接口，配置文件 driver.schedule.custom 进行配置
      */
     void schedule();
 
     /**
-     * Read Operation
+     * 读操作，请灵活运行，有些类型设备不一定能直接读取数据
      *
      * @param driverInfo Driver Attribute Info
      * @param pointInfo  Point Attribute Info
@@ -58,7 +51,7 @@ public interface DriverCustomService {
     String read(Map<String, AttributeInfo> driverInfo, Map<String, AttributeInfo> pointInfo, Device device, Point point);
 
     /**
-     * Write Operation
+     * 写操作，请灵活运行，有些类型设备不一定能直接写入数据
      *
      * @param driverInfo Driver Attribute Info
      * @param pointInfo  Point Attribute Info

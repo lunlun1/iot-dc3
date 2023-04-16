@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.driver.sdk.property;
+package io.github.pnoker.driver.sdk.entity.property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -22,9 +22,9 @@ import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
-import io.github.pnoker.common.enums.DriverStatusEnum;
+import io.github.pnoker.common.enums.DeviceStatusEnum;
 import io.github.pnoker.common.utils.JsonUtil;
-import io.github.pnoker.driver.sdk.property.DriverProperty;
+import io.github.pnoker.driver.sdk.entity.property.DriverProperty;
 import io.github.pnoker.driver.sdk.service.DriverSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -72,7 +72,7 @@ public class DriverSenderServiceImpl implements DriverSenderService {
     }
 
     @Override
-    public void deviceStatusSender(String deviceId, DriverStatusEnum status) {
+    public void deviceStatusSender(String deviceId, DeviceStatusEnum status) {
         deviceEventSender(new DeviceEvent(deviceId, EventConstant.Device.STATUS, status));
     }
 

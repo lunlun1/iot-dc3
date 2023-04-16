@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.pnoker.driver.sdk.property;
+package io.github.pnoker.driver.sdk.entity.property;
 
 import io.github.pnoker.common.enums.DriverTypeFlagEnum;
 import io.github.pnoker.common.model.DriverAttribute;

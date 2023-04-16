@@ -19,7 +19,7 @@ package io.github.pnoker.driver.sdk.config;
 import io.github.pnoker.common.config.ExchangeConfig;
 import io.github.pnoker.common.constant.driver.RabbitConstant;
 import io.github.pnoker.driver.sdk.DriverContext;
-import io.github.pnoker.driver.sdk.property.DriverProperty;
+import io.github.pnoker.driver.sdk.entity.property.DriverProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

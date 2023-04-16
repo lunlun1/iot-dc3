@@ -46,9 +46,9 @@ import java.util.Optional;
 public class DriverContext {
 
     /**
-     * 驱动 状态，默认为：注册中
+     * 驱动 状态
      */
-    private DriverStatusEnum driverStatus = DriverStatusEnum.REGISTERING;
+    private DriverStatusEnum driverStatus = DriverStatusEnum.OFFLINE;
 
     /**
      * 驱动 元数据，当且仅当驱动注册成功之后由 Manager 返回

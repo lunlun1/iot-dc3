@@ -19,7 +19,7 @@ package io.github.pnoker.driver.sdk.service;
 import io.github.pnoker.common.dto.DriverEventDTO;
 import io.github.pnoker.common.entity.DeviceEvent;
 import io.github.pnoker.common.entity.point.PointValue;
-import io.github.pnoker.common.enums.DriverStatusEnum;
+import io.github.pnoker.common.enums.DeviceStatusEnum;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public interface DriverSenderService {
      * @param deviceId 设备ID
      * @param status   StatusEnum
      */
-    void deviceStatusSender(String deviceId, DriverStatusEnum status);
+    void deviceStatusSender(String deviceId, DeviceStatusEnum status);
 
     /**
      * 发送位号值到消息组件
