@@ -119,10 +119,6 @@ public class DriverCommandServiceImpl implements DriverCommandService {
 
         log.info("Start command of write: {}", JsonUtil.toPrettyJsonString(entityDTO));
         Boolean write = write(deviceWrite.getDeviceId(), deviceWrite.getPointId(), deviceWrite.getValue());
-        if (Boolean.TRUE.equals(write)) {
-            PointValue read = read(deviceWrite.getDeviceId(), deviceWrite.getPointId());
-            log.info("End command of write: {}", JsonUtil.toPrettyJsonString(read));
-        }
         log.info("End command of write: write {}", write);
     }
 
