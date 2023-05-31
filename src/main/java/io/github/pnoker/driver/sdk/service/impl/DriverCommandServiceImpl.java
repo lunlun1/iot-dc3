@@ -82,13 +82,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @Override
-    public void commandRead(DeviceCommandDTO entityDTO) {
-        DeviceCommandDTO.DeviceRead deviceRead = JsonUtil.parseObject(entityDTO.getContent(), DeviceCommandDTO.DeviceRead.class);
+    public void read(DeviceCommandDTO commandDTO) {
+        DeviceCommandDTO.DeviceRead deviceRead = JsonUtil.parseObject(commandDTO.getContent(), DeviceCommandDTO.DeviceRead.class);
         if (ObjectUtil.isNull(deviceRead)) {
             return;
         }
 
-        log.info("Start command of read: {}", JsonUtil.toPrettyJsonString(entityDTO));
+        log.info("Start command of read: {}", JsonUtil.toPrettyJsonString(commandDTO));
         PointValue read = read(deviceRead.getDeviceId(), deviceRead.getPointId());
         log.info("End command of read: {}", JsonUtil.toPrettyJsonString(read));
     }
@@ -111,13 +111,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @Override
-    public void commandWrite(DeviceCommandDTO entityDTO) {
-        DeviceCommandDTO.DeviceWrite deviceWrite = JsonUtil.parseObject(entityDTO.getContent(), DeviceCommandDTO.DeviceWrite.class);
+    public void write(DeviceCommandDTO commandDTO) {
+        DeviceCommandDTO.DeviceWrite deviceWrite = JsonUtil.parseObject(commandDTO.getContent(), DeviceCommandDTO.DeviceWrite.class);
         if (ObjectUtil.isNull(deviceWrite)) {
             return;
         }
 
-        log.info("Start command of write: {}", JsonUtil.toPrettyJsonString(entityDTO));
+        log.info("Start command of write: {}", JsonUtil.toPrettyJsonString(commandDTO));
         Boolean write = write(deviceWrite.getDeviceId(), deviceWrite.getPointId(), deviceWrite.getValue());
         log.info("End command of write: write {}", write);
     }

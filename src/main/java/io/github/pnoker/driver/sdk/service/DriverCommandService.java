@@ -37,11 +37,11 @@ public interface DriverCommandService {
     PointValue read(String deviceId, String pointId);
 
     /**
-     * 读取位号值
+     * 指令读取位号值
      *
-     * @param entityDTO DeviceCommandDTO
+     * @param commandDTO {@link DeviceCommandDTO}
      */
-    void commandRead(DeviceCommandDTO entityDTO);
+    void read(DeviceCommandDTO commandDTO);
 
     /**
      * 写取位号值
@@ -54,10 +54,10 @@ public interface DriverCommandService {
     Boolean write(String deviceId, String pointId, String value);
 
     /**
-     * 写取位号值
+     * 指令写取位号值
      *
-     * @param entityDTO DeviceCommandDTO
+     * @param commandDTO {@link  DeviceCommandDTO}
      */
-    void commandWrite(DeviceCommandDTO entityDTO);
+    void write(DeviceCommandDTO commandDTO);
 
 }

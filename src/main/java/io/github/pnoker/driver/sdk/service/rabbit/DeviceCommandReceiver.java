@@ -58,10 +58,10 @@ public class DeviceCommandReceiver {
 
             switch (entityDTO.getType()) {
                 case READ:
-                    driverCommandService.commandRead(entityDTO);
+                    driverCommandService.read(entityDTO);
                     break;
                 case WRITE:
-                    driverCommandService.commandWrite(entityDTO);
+                    driverCommandService.write(entityDTO);
                     break;
                 case CONFIG:
                     // to do something
